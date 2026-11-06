@@ -13,6 +13,8 @@ source of truth for behavior and scope.
 - Preserve offline behavior and cached data when a remote service fails.
 - Do not expose, log, export, or commit passwords, access tokens, refresh
   tokens, OAuth client secrets, or school credentials.
+- Follow the naming and versioning rules in `requirements.md`; keep app,
+  Android build, database schema, and requirements-document versions separate.
 
 ## Architecture boundaries
 

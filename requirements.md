@@ -7,6 +7,29 @@
 
 ---
 
+## 0.1 Naming and versioning standard
+
+- The product name is **Autoplaner**. Use this spelling and capitalization in
+  the UI, documentation, and release notes.
+- The Android application ID is `com.jero009.autoplaner`. It must not change
+  after the first installed release.
+- APK artifact names use lowercase kebab case:
+  `autoplaner-{appVersion}-{buildType}.apk`, for example
+  `autoplaner-0.1.0-debug.apk`.
+- App versions use Semantic Versioning (`MAJOR.MINOR.PATCH`):
+  - `MAJOR`: incompatible behavior or data changes.
+  - `MINOR`: backward-compatible user-visible features.
+  - `PATCH`: backward-compatible fixes and maintenance.
+- The initial development release is `0.1.0`. Pre-release identifiers may be
+  appended when needed, such as `0.2.0-beta.1`.
+- Android `versionCode` is a positive integer that increases for every
+  installable APK, including debug and pre-release builds. It is independent
+  of the app version and must never be reused.
+- The database `schema_version` and requirements-document `Version` are
+  separate version numbers and must not be used as the app version.
+
+---
+
 ## 0. Guiding Rule
 
 > **As simple as possible, but it has to work.**
