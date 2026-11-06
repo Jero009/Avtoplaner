@@ -355,3 +355,69 @@ autoplaner/
 ## 15. Later (not in v1)
 
 Background sync, an offline queue for Google edits, editing single recurring instances, recurring local events, morning summary, alternative-time suggestions for conflicts, encrypted database, password-protected backups, multiple Google accounts.
+
+---
+
+## 16. Development standards
+
+These standards apply to all Autoplaner code and documentation. The detailed
+agent workflow is maintained in [`agent.md`](agent.md).
+
+### 16.1 Naming and file structure
+
+- Use lowercase kebab-case for folders and non-component files:
+  `sync-runner.ts`, `calendar-repository.ts`.
+- Use PascalCase for React components and their files:
+  `CalendarPage.tsx`, `EventForm.tsx`.
+- Use camelCase for functions, variables, hooks, and repository methods.
+- Use PascalCase for TypeScript types, interfaces, and classes.
+- Use singular names for domain entities and repositories.
+- Keep tests beside the code they test with `.test.ts` or `.test.tsx`.
+- Keep one primary responsibility per file.
+
+### 16.2 TypeScript and architecture
+
+- Use strict TypeScript and explicit domain types at system boundaries.
+- Avoid `any`, broad type assertions, and non-null assertions used only to
+  silence type errors.
+- Prefer small pure functions for date conversion, conflict detection,
+  averages, validation, and API response mapping.
+- Use `async`/`await`; handle errors explicitly and never silently swallow
+  failures.
+- Validate external data before writing it to SQLite.
+- Keep pages and components independent from integration and database details.
+- Pages read through repositories or focused hooks; integrations write through
+  the sync runner.
+
+### 16.3 Sharing and reuse
+
+- Share behavior through focused utilities, hooks, repositories, and domain
+  services rather than mutable global state.
+- Do not duplicate SQL, date formatting, source checks, or sync replacement
+  logic.
+- Prefer composition and small explicit interfaces over inheritance and
+  speculative generic abstractions.
+- Extract shared code when multiple real callers share the same invariant.
+
+### 16.4 UI and localization
+
+- Put pages in `src/pages/` and reusable UI in `src/components/`.
+- Route all user-visible text through i18n; do not hard-code JSX text.
+- Provide accessible labels, keyboard support, semantic HTML, and minimum
+  44 px touch targets.
+- Make loading, empty, offline, and error states explicit for every data view.
+
+### 16.5 Tests, commits, and sharing
+
+- Test business rules and failure paths before visual details.
+- Add regression tests for fixed bugs involving data, dates, sync, or
+  permissions.
+- Use descriptive behavior-focused test names.
+- Keep commits small and single-purpose with imperative subjects.
+- Do not mix formatting-only changes with behavior changes.
+- Before sharing a branch or pull request, run applicable checks and
+  `git diff --check`.
+- Never share secrets, credentials, tokens, private school data, or generated
+  authentication files.
+- Preserve required third-party copyright and license notices when using
+  external code.
