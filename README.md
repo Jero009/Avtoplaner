@@ -14,6 +14,9 @@ scaffold. eAsistent and Google integrations are not enabled yet. The technical
 spikes in [`docs/spikes.md`](docs/spikes.md) must be completed before those
 integrations are implemented.
 
+Pre-development prerequisites and their status are tracked in
+[`docs/pre-development.md`](docs/pre-development.md).
+
 ## eAsistent implementation reference
 
 The selected reference repository is
@@ -58,4 +61,3 @@ Access to eAsistent must comply with its terms and applicable law.
 See [`requirements.md`](requirements.md) for the full product requirements and
 roadmap. Database migrations are in `src/db/migrations/` and are applied in
 numeric order. Timestamps are stored as UTC ISO-8601 strings.
-
