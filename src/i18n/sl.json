@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "Autoplaner"
+  },
+  "nav": {
+    "dashboard": "Nadzorna plošča",
+    "calendar": "Koledar",
+    "timetable": "Urnik",
+    "grades": "Ocene",
+    "homework": "Domače naloge",
+    "settings": "Nastavitve",
+    "menu": "Meni"
+  },
+  "common": {
+    "loading": "Nalaganje …",
+    "error": "Nekaj je šlo narobe.",
+    "retry": "Poskusi znova",
+    "cancel": "Prekliči",
+    "save": "Shrani",
+    "delete": "Izbriši",
+    "edit": "Uredi",
+    "close": "Zapri",
+    "confirm": "Potrdi",
+    "today": "Danes",
+    "previous": "Prejšnje obdobje",
+    "next": "Naslednje obdobje",
+    "offline": "Brez povezave",
+    "version": "Različica {{version}}",
+    "toggleNavigation": "Preklopi navigacijo",
+    "toggleTheme": "Preklopi temo"
+  },
+  "dashboard": {
+    "title": "Nadzorna plošča",
+    "today": "Danes",
+    "todayEvents": "Današnji dogodki",
+    "next7days": "Naslednjih 7 dni",
+    "homeworkDueSoon": "Domače naloge v roku",
+    "noEventsToday": "Danes ni dogodkov.",
+    "noEventsNext7Days": "V naslednjih 7 dneh ni dogodkov.",
+    "noHomeworkDue": "Ni domačih nalog v roku.",
+    "allDay": "ves dan",
+    "conflictBadge": "Spor"
+  },
+  "calendar": {
+    "title": "Koledar",
+    "viewDay": "Dan",
+    "viewWeek": "Teden",
+    "viewMonth": "Mesec",
+    "viewAgenda": "Agenda",
+    "newEvent": "Nov dogodek",
+    "editEvent": "Uredi dogodek",
+    "eventDetails": "Podrobnosti dogodka",
+    "fieldTitle": "Naslov",
+    "fieldStart": "Začetek",
+    "fieldEnd": "Konec",
+    "fieldAllDay": "Ves dan",
+    "fieldDescription": "Opis",
+    "fieldLocation": "Lokacija",
+    "fieldCalendar": "Koledar",
+    "validation": {
+      "titleRequired": "Naslov je obvezen.",
+      "endAfterStart": "Konec mora biti po začetku."
+    },
+    "deleteConfirmTitle": "Izbrisati dogodek?",
+    "deleteConfirmMessage": "Dogodek „{{title}}“ bo trajno izbrisan.",
+    "conflictWarning": "Ta dogodek se prekriva z drugim dogodkom. Odloči se, kaj želiš storiti.",
+    "conflictsWith": "V sporu z: {{titles}}",
+    "sources": "Koledarji",
+    "localCalendarName": "Osebni",
+    "noCalendars": "Ni koledarjev."
+  },
+  "timetable": {
+    "title": "Urnik",
+    "phase4Title": "Urnik še ni na voljo",
+    "phase4Description": "Urnik, spremembe in dopusti bodo prišli v 4. fazi, ko bodo podatki šole (eAsistent ali ročni vnos) povezani."
+  },
+  "grades": {
+    "title": "Ocene",
+    "phase4Title": "Ocene še niso na voljo",
+    "phase4Description": "Ocene po predmetih, povprečja in splošno povprečje bodo prišli v 4. fazi."
+  },
+  "homework": {
+    "title": "Domače naloge",
+    "phase4Title": "Domače naloge še niso na voljo",
+    "phase4Description": "Seznam nalog z opravljanjem in filtri bo prišel v 4. fazi."
+  },
+  "settings": {
+    "title": "Nastavitve",
+    "appearance": "Videz",
+    "theme": "Tema",
+    "themeLight": "Svetla",
+    "themeDark": "Temna",
+    "themeSystem": "Sistemska",
+    "language": "Jezik",
+    "languageSl": "Slovenščina",
+    "languageEn": "English",
+    "calendarsSection": "Koledarji",
+    "calendarVisibility": "Vidnost koledarjev",
+    "backupSection": "Varnostna kopija",
+    "backupDescription": "Izvozi vse podatke v eno JSON-datotiko. Uvoz zamenja vse podatke v aplikaciji.",
+    "export": "Izvozi varnostno kopijo",
+    "import": "Uvozi varnostno kopijo",
+    "importFileSelected": "Izbrana datoteka: {{name}}",
+    "importConfirmTitle": "Uvoziti varnostno kopijo?",
+    "importConfirmMessage": "To bo zamenjalo VSE podatke v aplikaciji s podatki iz datoteke. Dejanja ni mogoče razveljaviti.",
+    "importSuccess": "Varnostna kopija je uvožena.",
+    "exportSuccess": "Varnostna kopija je izvožena.",
+    "backupErrors": {
+      "invalidJson": "Datoteka ni veljaven JSON.",
+      "notAnObject": "Vsebina datoteke ni veljavna varnostna kopija.",
+      "missingAppVersion": "V datoteki manjka različica aplikacije.",
+      "invalidSchemaVersion": "V datoteki manjka veljavna različica sheme.",
+      "schemaVersionMismatch": "Različica sheme se ne ujema s trenutno aplikacijo.",
+      "missingExportedAt": "V datoteki manjka datum izvoza.",
+      "invalidExportedAt": "Datum izvoza je neveljaven.",
+      "missingData": "V datoteki manjkajo podatki.",
+      "invalidTable": "Tabela „{{table}}“ v datoteki je neveljavna.",
+      "importFailed": "Uvoz ni uspel."
+    }
+  },
+  "db": {
+    "initError": "Podatkovne baze ni bilo mogoče odpreti.",
+    "loadingDb": "Pripravljam podatkovno bazo …"
+  }
+}

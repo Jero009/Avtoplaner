@@ -1,0 +1,125 @@
+{
+  "app": {
+    "name": "Autoplaner"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "calendar": "Calendar",
+    "timetable": "Timetable",
+    "grades": "Grades",
+    "homework": "Homework",
+    "settings": "Settings",
+    "menu": "Menu"
+  },
+  "common": {
+    "loading": "Loading …",
+    "error": "Something went wrong.",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "today": "Today",
+    "previous": "Previous period",
+    "next": "Next period",
+    "offline": "Offline",
+    "version": "Version {{version}}",
+    "toggleNavigation": "Toggle navigation",
+    "toggleTheme": "Toggle theme"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "today": "Today",
+    "todayEvents": "Today's events",
+    "next7days": "Next 7 days",
+    "homeworkDueSoon": "Homework due soon",
+    "noEventsToday": "No events today.",
+    "noEventsNext7Days": "No events in the next 7 days.",
+    "noHomeworkDue": "No homework due soon.",
+    "allDay": "all day",
+    "conflictBadge": "Conflict"
+  },
+  "calendar": {
+    "title": "Calendar",
+    "viewDay": "Day",
+    "viewWeek": "Week",
+    "viewMonth": "Month",
+    "viewAgenda": "Agenda",
+    "newEvent": "New event",
+    "editEvent": "Edit event",
+    "eventDetails": "Event details",
+    "fieldTitle": "Title",
+    "fieldStart": "Start",
+    "fieldEnd": "End",
+    "fieldAllDay": "All day",
+    "fieldDescription": "Description",
+    "fieldLocation": "Location",
+    "fieldCalendar": "Calendar",
+    "validation": {
+      "titleRequired": "Title is required.",
+      "endAfterStart": "End must be after start."
+    },
+    "deleteConfirmTitle": "Delete event?",
+    "deleteConfirmMessage": "The event “{{title}}” will be permanently deleted.",
+    "conflictWarning": "This event overlaps another event. Decide what you want to do.",
+    "conflictsWith": "Conflicts with: {{titles}}",
+    "sources": "Calendars",
+    "localCalendarName": "Personal",
+    "noCalendars": "No calendars."
+  },
+  "timetable": {
+    "title": "Timetable",
+    "phase4Title": "Timetable is not available yet",
+    "phase4Description": "Timetable, changes and holidays arrive in Phase 4, together with school data (eAsistent or manual entry)."
+  },
+  "grades": {
+    "title": "Grades",
+    "phase4Title": "Grades are not available yet",
+    "phase4Description": "Grades by subject, subject averages and the overall average arrive in Phase 4."
+  },
+  "homework": {
+    "title": "Homework",
+    "phase4Title": "Homework is not available yet",
+    "phase4Description": "The homework list with completion and filters arrives in Phase 4."
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "language": "Language",
+    "languageSl": "Slovenščina",
+    "languageEn": "English",
+    "calendarsSection": "Calendars",
+    "calendarVisibility": "Calendar visibility",
+    "backupSection": "Backup",
+    "backupDescription": "Export all data to a single JSON file. Importing replaces all data in the app.",
+    "export": "Export backup",
+    "import": "Import backup",
+    "importFileSelected": "Selected file: {{name}}",
+    "importConfirmTitle": "Import backup?",
+    "importConfirmMessage": "This will replace ALL data in the app with the file's contents. This cannot be undone.",
+    "importSuccess": "Backup imported.",
+    "exportSuccess": "Backup exported.",
+    "backupErrors": {
+      "invalidJson": "The file is not valid JSON.",
+      "notAnObject": "The file content is not a valid backup.",
+      "missingAppVersion": "The app version is missing in the file.",
+      "invalidSchemaVersion": "A valid schema version is missing in the file.",
+      "schemaVersionMismatch": "The schema version does not match the current app.",
+      "missingExportedAt": "The export date is missing in the file.",
+      "invalidExportedAt": "The export date is invalid.",
+      "missingData": "The data section is missing in the file.",
+      "invalidTable": "Table “{{table}}” in the file is invalid.",
+      "importFailed": "Import failed."
+    }
+  },
+  "db": {
+    "initError": "The database could not be opened.",
+    "loadingDb": "Preparing the database …"
+  }
+}
