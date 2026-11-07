@@ -89,26 +89,53 @@ async function initializeWebStore(sqlite: SQLiteConnection): Promise<void> {
   await sqlite.initWebStore();
 }
 
+/** One shared SQLiteConnection for the whole app: the plugin tracks
+ * connections per-instance, so a fresh instance per initialize() call breaks
+ * isConnection/retrieveConnection ("Connection autoplaner already exists" /
+ * "does not exist" errors, database sections rendering dead). */
+let sharedSqlite: SQLiteConnection | null = null;
+
 async function initialize(): Promise<DbDriver> {
-  const sqlite = new SQLiteConnection(CapacitorSQLite);
+  const sqlite = (sharedSqlite ??= new SQLiteConnection(CapacitorSQLite));
   if (Capacitor.getPlatform() === 'web') {
     await initializeWebStore(sqlite);
   }
   const existing = await sqlite.isConnection(DB_NAME, false);
-  const conn = existing.result
-    ? await sqlite.retrieveConnection(DB_NAME, false)
-    : await sqlite.createConnection(DB_NAME, false, 'no-encryption', 1, false);
+  let conn: SQLiteDBConnection;
+  if (existing.result) {
+    conn = await sqlite.retrieveConnection(DB_NAME, false);
+  } else {
+    try {
+      conn = await sqlite.createConnection(DB_NAME, false, 'no-encryption', 1, false);
+    } catch (error) {
+      // Concurrent init: another caller registered the connection between our
+      // isConnection check and createConnection (both ran before either
+      // registered). The plugin then rejects createConnection with
+      // "CreateConnection: Connection <name> already exists" and the app
+      // rendered "database could not be opened" everywhere. Recover by
+      // retrieving the connection the other caller created.
+      if (String(error).includes('already exists')) {
+        conn = await sqlite.retrieveConnection(DB_NAME, false);
+      } else {
+        throw error;
+      }
+    }
+  }
   await conn.open();
   await conn.execute('PRAGMA foreign_keys = ON;');
   return new SqliteDriver(conn);
 }
 
 let driverPromise: Promise<DbDriver> | null = null;
+/** Serializes initialize() runs so only one create/retrieve race exists. */
+let initChain: Promise<unknown> = Promise.resolve();
 
 /** Open (and memoize) the application database connection. */
 export function openDatabase(): Promise<DbDriver> {
   if (!driverPromise) {
-    driverPromise = initialize().catch((error: unknown) => {
+    const run = initChain.then(() => initialize());
+    initChain = run.catch(() => undefined);
+    driverPromise = run.catch((error: unknown) => {
       driverPromise = null;
       throw error;
     });

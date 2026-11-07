@@ -23,6 +23,9 @@ export interface DayTimelineProps {
 
 const NOW_TICK_MS = 30_000;
 
+/** Stable default so the effect dependency doesn't churn identity per render. */
+const defaultNow = () => new Date();
+
 function minutesLabel(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
@@ -42,7 +45,7 @@ export function DayTimeline({
   onPrevDay,
   onNextDay,
   onToday,
-  now = () => new Date(),
+  now = defaultNow,
 }: DayTimelineProps) {
   const { t, i18n } = useTranslation();
   const [nowDate, setNowDate] = useState(now);
