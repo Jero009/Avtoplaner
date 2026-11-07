@@ -9,10 +9,14 @@ and a PWA build. Data is stored locally; there is no Autoplaner backend.
 
 ## Status
 
-The repository currently contains the initial SQLite schema and project
-scaffold. eAsistent and Google integrations are not enabled yet. The technical
-spikes in [`docs/spikes.md`](docs/spikes.md) must be completed before those
-integrations are implemented.
+- **Local calendar (v1.0):** FullCalendar views, local event CRUD with
+  conflict detection, dashboard, themes, sl/en i18n, SQLite with migrations,
+  backup export/import, Android (Capacitor) + PWA builds.
+- **eAsistent integration (v1.1):** login + timetable sync into the local
+  database (lessons, substitutions/cancellations, homework, announced
+  tests), shown in the calendar, timetable and homework pages. Android only
+  for syncing — the browser/PWA is blocked by CORS and shows a clear error.
+  Grades, Google Calendar and notifications are not enabled yet.
 
 Pre-development prerequisites and their status are tracked in
 [`docs/pre-development.md`](docs/pre-development.md).

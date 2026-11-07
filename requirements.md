@@ -1,6 +1,6 @@
 # Autoplaner – Project Requirements
 
-**Version:** 1.2
+**Version:** 1.3
 **Status:** Simplified, buildable specification
 **Application type:** Android APK (primary) + installable PWA (secondary)
 **Languages:** Slovenian (default), English
@@ -62,7 +62,7 @@ All data is stored locally in SQLite. There is no backend, no login and no user 
 | Local calendar & events | ✅ | ✅ |
 | Dashboard, themes, languages | ✅ | ✅ |
 | Google Calendar | ✅ | ✅ |
-| eAsistent | ✅ | ⚠️ Only if Phase 0 confirms it works (CORS) |
+| eAsistent | ✅ | ❌ API blocked by CORS in the browser — clear error shown, cached data stays visible |
 | Notifications when app is closed | ✅ (scheduled local notifications) | ❌ In-app only |
 | Backup / restore | ✅ | ✅ |
 
@@ -205,6 +205,17 @@ There is **no background sync and no offline change queue.**
 - Recurring events are **displayed** but can only be edited as a whole series (no "this event only" in v1).
 - New events created from Autoplaner are **non-recurring** in v1.
 
+### 5.5 eAsistent details (implemented)
+- **Login:** `POST /m/login` (web platform headers) on every sync — the token expires after ~24 h, so nothing long-lived is kept.
+- **Window:** timetable is fetched from **−14 days to +42 days** around today, chunked into **≤14-day windows** (the endpoint rejects longer ranges with HTTP 400) and deduped by full event JSON across overlapping windows.
+- **Data mapping** (all from `/m/timetable/events`; `/m/exams/` is empty in practice):
+  - `urnik$` blocks → `lessons` (status `normal`) + calendar events.
+  - `type: "event"` entries → substitutions (`subject` = the NEW subject, `original_subject` = the replaced one), cancelled hours (`is_canceled`) and one-off school events.
+  - `ocenjevanje$<id>` events with an `evaluation` object → announced tests (calendar events, bold styling).
+  - Homework text lives inside lesson events as `homework[]` → `homework` rows; the due date is the lesson date (the API exposes none).
+- **Idempotency:** row ids derive from stable API ids/content hashes, so a re-sync replaces the same rows without duplicates. Locally checked-off homework stays done.
+- **Credentials:** username + password are stored in the local `settings` table (never hardcoded, never logged, never included in backups). Transport uses `CapacitorHttp` on Android; on web, `fetch` — where CORS blocks the API, the sync fails with a clear message and keeps the cached data.
+
 ---
 
 ## 6. Database
@@ -275,7 +286,11 @@ New timetable changes are only detected when a sync runs (app opened / foregroun
 ## 9. Security & Privacy
 
 - No backend. Data only goes to Google and eAsistent.
-- The eAsistent password is used once to log in. **Only the session token** is stored (secure storage on Android). If the token expires, the user logs in again.
+- The eAsistent username and password are stored **only in the app's local
+  `settings` table** (never hardcoded, never logged, never included in
+  backups). Each sync re-logs in because the session token expires after
+  ~24 h; no token is persisted. Syncs go through `CapacitorHttp` on Android
+  (native TLS, no WebView CORS).
 - Google access tokens are kept in memory or secure storage only.
 - Tokens and passwords are never logged.
 - Disconnect removes the tokens and that source's cached data.
@@ -321,7 +336,9 @@ autoplaner/
 └── package.json
 ```
 
-**Rule:** pages never call integrations directly. They only read from repositories. Integrations only write to the database through the sync runner.
+**Rule:** pages never call integrations directly. They read from repositories
+and trigger syncs through the shared sync hook (`useEasistentSync`);
+integrations only write to the database through the sync runner.
 
 ---
 
@@ -345,7 +362,12 @@ autoplaner/
 - conflict detection,
 - grade averages,
 - UTC ↔ Ljubljana conversion (including DST change days),
-- backup validation.
+- backup validation,
+- eAsistent API response parsing (realistic fixtures: lessons, homework,
+  announced tests, substitutions, cancellations),
+- eAsistent sync idempotency and homework done-flag persistence (against a
+  real in-memory SQLite via sql.js),
+- backup export redaction of the stored password.
 
 **Manual checklist** before each release:
 - App starts in airplane mode with cached data.
