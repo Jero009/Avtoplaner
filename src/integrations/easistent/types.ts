@@ -7,8 +7,12 @@
 /** Subject attached to a timetable entry; some entries carry a plain string. */
 export interface EaSubjectRef {
   id?: number;
+  /** The live API names it `subject_id` on timetable events (Sep 2026). */
+  subject_id?: number;
   title?: string;
   title_short?: string | null;
+  /** Hex color the school assigned to the subject. */
+  color?: string | null;
 }
 
 /** Homework item nested inside a timetable lesson event. */

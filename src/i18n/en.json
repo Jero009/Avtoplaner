@@ -78,6 +78,23 @@
     "insteadOf": "instead of: {{subject}}",
     "weekOf": "Week of {{date}}"
   },
+  "timeline": {
+    "previousDay": "Previous day",
+    "nextDay": "Next day",
+    "goToday": "Today",
+    "empty": "No lessons or events on this day.",
+    "now": "current time",
+    "newEvent": "New event"
+  },
+  "myHours": {
+    "title": "My hours",
+    "description": "Where two groups' lessons overlap, pick once which hour is yours. The choice applies to every week; unselected lessons are not synced and not shown.",
+    "empty": "No overlapping lessons.",
+    "showAll": "Show all",
+    "hint": "Some lessons still overlap — pick yours.",
+    "roomPrefix": "room",
+    "slotLabel": "{{weekday}} {{from}}–{{to}}"
+  },
   "grades": {
     "title": "Grades",
     "phase4Title": "Grades are not available yet",

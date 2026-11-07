@@ -78,6 +78,23 @@
     "insteadOf": "namesto: {{subject}}",
     "weekOf": "Teden od {{date}}"
   },
+  "timeline": {
+    "previousDay": "Prejšnji dan",
+    "nextDay": "Naslednji dan",
+    "goToday": "Danes",
+    "empty": "Ta dan ni ur ali dogodkov.",
+    "now": "trenutni čas",
+    "newEvent": "Nov dogodek"
+  },
+  "myHours": {
+    "title": "Moje ure",
+    "description": "Kjer se uri dveh skupin prekrivata, enkrat izberi, katera je tvoja. Izbira velja za vse tedne; neizbrane ure se ne sinhronizirajo in ne prikazujejo.",
+    "empty": "Ni prekrivajočih se ur.",
+    "showAll": "Pokaži vse",
+    "hint": "Nekatere ure se še prekrivajo — izberi svojo.",
+    "roomPrefix": "uč.",
+    "slotLabel": "{{weekday}} {{from}}–{{to}}"
+  },
   "grades": {
     "title": "Ocene",
     "phase4Title": "Ocene še niso na voljo",

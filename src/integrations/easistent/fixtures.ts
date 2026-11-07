@@ -8,9 +8,9 @@ import type { EaTimetableEvent, EaTimetableResponse } from './types';
 
 export function lessonBlock(overrides: Partial<EaTimetableEvent> = {}): EaTimetableEvent {
   return {
-    id: 566422635,
+    id: 700422635,
     type: 'block',
-    slug: 'urnik$566422635',
+    slug: 'urnik$700422635',
     date: '2026-10-23',
     from: '08:00',
     to: '08:45',
@@ -24,8 +24,8 @@ export function lessonBlock(overrides: Partial<EaTimetableEvent> = {}): EaTimeta
 
 export function lessonWithHomework(): EaTimetableEvent {
   return lessonBlock({
-    id: 566422640,
-    slug: 'urnik$566422640',
+    id: 700422640,
+    slug: 'urnik$700422640',
     date: '2026-10-23',
     from: '09:00',
     to: '09:45',
@@ -119,4 +119,115 @@ export function loginResponse(): unknown {
     access_token: { token: 'test-jwt-token' },
     user: { id: 1234567 },
   };
+}
+
+/* ------------------------------------------------------------------ */
+/* Fully synthetic split-group timetable (NO real school data).       */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A synthetic two-week timetable whose class is split into two groups, in
+ * the exact payload shape of `/m/timetable/events`. Fake subjects, teachers,
+ * classrooms and slugs only — used to test split-slot detection and the
+ * one-time group picker. Mirrors the real-world pattern: both groups'
+ * lessons share the same weekly slot (same weekday + from + to).
+ *
+ * Layout (2026-11-09 is a Monday):
+ * - CCC lesson Mon–Fri 07:45–08:30 (never split).
+ * - Split slots, each with AAA (room 11) + BBB (room 18):
+ *     Mon 08:35–09:20, Mon 12:30–13:15, Tue 10:50–11:35, Thu 09:25–10:10
+ *   in both weeks (2026-11-09…13 and 2026-11-16…20).
+ * - Homework "Naloga AAA" on the AAA Mon 08:35 lesson (week 1) and
+ *   "Vaje BBB" on the BBB Mon 08:35 lesson (week 1).
+ * - Week 2: the BBB Mon 08:35 hour is substituted (original: Predmet BBB).
+ */
+const SYNTH_SUBJECTS = {
+  aaa: { subject_id: 111, title: 'Predmet AAA', title_short: 'AAA', color: '#c15644' },
+  bbb: { subject_id: 222, title: 'Predmet BBB', title_short: 'BBB', color: '#2f7ed8' },
+  ccc: { subject_id: 333, title: 'Predmet CCC', title_short: 'CCC', color: '#4caf50' },
+} as const;
+
+const SYNTH_TEACHERS = {
+  aaa: ['Učitelj Ena'],
+  bbb: ['Učitelj Dva'],
+  ccc: ['Učitelj Tri'],
+} as const;
+
+let synthId = 900_000;
+
+function synthLesson(
+  dayIso: string,
+  from: string,
+  to: string,
+  subjectKey: keyof typeof SYNTH_SUBJECTS,
+  classroom: string,
+  homework: string[] = [],
+): EaTimetableEvent {
+  synthId += 1;
+  return {
+    id: synthId,
+    type: 'block',
+    slug: `urnik$${synthId}`,
+    date: dayIso,
+    from,
+    to,
+    subject: { ...SYNTH_SUBJECTS[subjectKey] },
+    teachers: [...SYNTH_TEACHERS[subjectKey]],
+    classroom,
+    homework: homework.map((title) => ({ title, description: '', done: false })),
+  };
+}
+
+export function splitGroupTimetable(): EaTimetableEvent[] {
+  const mondays = ['2026-11-09', '2026-11-16'];
+  const tuesdays = ['2026-11-10', '2026-11-17'];
+  const thursdays = ['2026-11-12', '2026-11-19'];
+  const fridays = ['2026-11-13', '2026-11-20'];
+  const weekdays = [...mondays, ...tuesdays, ...thursdays, ...fridays];
+
+  const entries: EaTimetableEvent[] = [];
+
+  for (const day of weekdays) {
+    entries.push(synthLesson(day, '07:45', '08:30', 'ccc', '23'));
+  }
+  for (const monday of mondays) {
+    const isFirstWeek = monday === mondays[0];
+    entries.push(
+      synthLesson(monday, '08:35', '09:20', 'aaa', '11', isFirstWeek ? ['Naloga AAA'] : []),
+      synthLesson(monday, '08:35', '09:20', 'bbb', '18', isFirstWeek ? ['Vaje BBB'] : []),
+      synthLesson(monday, '12:30', '13:15', 'aaa', '11'),
+      synthLesson(monday, '12:30', '13:15', 'bbb', '18'),
+    );
+  }
+  for (const tuesday of tuesdays) {
+    entries.push(
+      synthLesson(tuesday, '10:50', '11:35', 'aaa', '11'),
+      synthLesson(tuesday, '10:50', '11:35', 'bbb', '18'),
+    );
+  }
+  for (const thursday of thursdays) {
+    entries.push(
+      synthLesson(thursday, '09:25', '10:10', 'aaa', '11'),
+      synthLesson(thursday, '09:25', '10:10', 'bbb', '18'),
+    );
+  }
+
+  // Week 2: the BBB Monday 08:35 hour is substituted by CCC.
+  synthId += 1;
+  entries.push({
+    id: synthId,
+    type: 'event',
+    slug: `dogodek$${synthId}`,
+    date: mondays[1]!,
+    from: '08:35',
+    to: '09:20',
+    subject: { ...SYNTH_SUBJECTS.ccc },
+    teachers: [...SYNTH_TEACHERS.ccc],
+    classroom: '23',
+    is_substitution: true,
+    original_subject: SYNTH_SUBJECTS.bbb.title,
+    type_label: 'NADOMEŠČANJE',
+  });
+
+  return entries;
 }

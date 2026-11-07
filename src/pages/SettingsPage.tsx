@@ -10,6 +10,7 @@ import type { SyncStateRecord } from '../db/types';
 import { CalendarToggleList } from '../components/CalendarToggleList';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { LoadingState } from '../components/LoadingState';
+import { MyHoursSection } from '../components/MyHoursSection';
 import { buildBackup, validateBackup } from '../utils/backup';
 import {
   exportAllTables,
@@ -250,6 +251,8 @@ export function SettingsPage() {
           />
         )}
       </section>
+
+      <MyHoursSection />
 
       <section className="card" aria-labelledby="easistent-heading">
         <h2 id="easistent-heading" className="section-title mb-1">

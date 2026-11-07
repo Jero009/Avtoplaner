@@ -26,6 +26,11 @@ import { LoadingState } from '../components/LoadingState';
 import { findConflictingIds } from '../utils/conflicts';
 import { toDateTimeLocalValue } from '../utils/dates';
 import { DbInitError } from '../components/DbInitError';
+import {
+  applyGroupChoices,
+  GROUP_CHOICES_KEY,
+  parseChoices,
+} from '../integrations/easistent/group-choice';
 
 type ViewKey = 'day' | 'week' | 'month' | 'agenda';
 
@@ -93,11 +98,23 @@ export function CalendarPage() {
       // mutation, which re-registers the event source and refetches.
       void refreshKey;
       try {
-        const records = await dbState.database.repos.events.listBetween(
-          fetchInfo.start.toISOString(),
-          fetchInfo.end.toISOString(),
-        );
-        const visible = records.filter((record) =>
+        const [records, lessons, subjects, choicesRaw] = await Promise.all([
+          dbState.database.repos.events.listBetween(
+            fetchInfo.start.toISOString(),
+            fetchInfo.end.toISOString(),
+          ),
+          dbState.database.repos.lessons.listAll(),
+          dbState.database.repos.subjects.listAll(),
+          dbState.database.repos.settings.get(GROUP_CHOICES_KEY),
+        ]);
+        // Hide non-selected group events defensively (sync already filters).
+        const { events: groupFiltered } = applyGroupChoices({
+          lessons,
+          events: records,
+          subjects,
+          choices: parseChoices(choicesRaw),
+        });
+        const visible = groupFiltered.filter((record) =>
           visibleIds.includes(record.calendarId),
         );
         eventsById.current = new Map(visible.map((record) => [record.id, record]));

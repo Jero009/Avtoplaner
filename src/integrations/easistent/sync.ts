@@ -7,6 +7,11 @@ import {
 } from './client';
 import { EasistentError, type RequestFn, defaultRequest } from './http';
 import { parseTimetable } from './parse';
+import {
+  GROUP_CHOICES_KEY,
+  filterEntriesByGroupChoices,
+  parseChoices,
+} from './group-choice';
 
 /** Settings-table keys holding the stored credentials. */
 export const EASISTENT_USERNAME_KEY = 'easistent.username';
@@ -77,7 +82,12 @@ export async function syncEasistent(
 
   try {
     const entries = await client.fetchTimetable(fromDay, toDay);
-    const parsed = parseTimetable(entries);
+    // Drop the non-selected group's entries before parsing so their
+    // lessons, calendar events AND homework never reach the database.
+    // See group-choice.ts for the choice contract.
+    const choices = parseChoices(await repos.settings.get(GROUP_CHOICES_KEY));
+    const kept = filterEntriesByGroupChoices(entries, choices);
+    const parsed = parseTimetable(kept);
 
     const result = await driver.transaction<SyncResult>(() =>
       replaceEasistentRows(driver, repos, parsed, now),
@@ -122,15 +132,15 @@ async function replaceEasistentRows(
 
   for (const subject of parsed.subjects) {
     await driver.run(
-      'INSERT INTO subjects (id, external_id, name, short_name, color) VALUES (?, NULL, ?, ?, NULL)',
-      [subject.id, subject.name, subject.shortName],
+      'INSERT INTO subjects (id, external_id, name, short_name, color) VALUES (?, ?, ?, ?, ?)',
+      [subject.id, subject.externalId, subject.name, subject.shortName, subject.color],
     );
   }
 
   for (const lesson of parsed.lessons) {
     await driver.run(
-      `INSERT INTO lessons (id, subject_id, teacher, classroom, start_utc, end_utc, status)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO lessons (id, subject_id, teacher, classroom, start_utc, end_utc, status, note)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         lesson.id,
         lesson.subjectId,
@@ -139,6 +149,7 @@ async function replaceEasistentRows(
         lesson.startUtc,
         lesson.endUtc,
         lesson.status,
+        lesson.note,
       ],
     );
   }

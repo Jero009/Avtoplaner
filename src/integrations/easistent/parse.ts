@@ -22,10 +22,23 @@ export function stableHash(input: string): string {
   return (h1.toString(16).padStart(8, '0') + h2.toString(16).padStart(8, '0')).slice(0, 12);
 }
 
+/**
+ * Stable row id for a subject name — identical to the ids the parser writes
+ * into the `subjects` table, so group choices can reference subjects without
+ * another lookup (see integrations/easistent/group-choice.ts).
+ */
+export function subjectRowId(name: string): string {
+  return `ea-subj:${stableHash(name)}`;
+}
+
 export interface ParsedSubject {
   id: string;
+  /** The API's numeric subject id when the payload carried one. */
+  externalId: string | null;
   name: string;
   shortName: string | null;
+  /** Hex color the school assigned to the subject, null when unknown. */
+  color: string | null;
 }
 
 export interface ParsedLesson {
@@ -103,13 +116,29 @@ function subjectIdOf(
     subject && typeof subject === 'object' && subject.title_short?.trim()
       ? subject.title_short.trim()
       : null;
-  const id = `ea-subj:${stableHash(name)}`;
+  const externalId =
+    subject && typeof subject === 'object' &&
+    (subject.subject_id ?? subject.id) !== undefined &&
+    (subject.subject_id ?? subject.id) !== null
+      ? String(subject.subject_id ?? subject.id)
+      : null;
+  const color =
+    subject && typeof subject === 'object' && subject.color?.trim()
+      ? subject.color.trim()
+      : null;
+  const id = subjectRowId(name);
   if (!byId.has(id)) {
-    byId.set(id, { id, name, shortName: short });
+    byId.set(id, { id, externalId, name, shortName: short, color });
   } else {
     const existing = byId.get(id)!;
     if (short && !existing.shortName) {
       existing.shortName = short;
+    }
+    if (externalId && !existing.externalId) {
+      existing.externalId = externalId;
+    }
+    if (color && !existing.color) {
+      existing.color = color;
     }
   }
   return id;

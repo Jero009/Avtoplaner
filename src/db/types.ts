@@ -49,6 +49,8 @@ export interface LessonRecord {
   startUtc: string;
   endUtc: string;
   status: LessonStatus;
+  /** Change note, e.g. the original subject of a substitution. */
+  note: string | null;
 }
 
 export interface GradeRecord {

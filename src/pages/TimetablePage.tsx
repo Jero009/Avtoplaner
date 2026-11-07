@@ -10,6 +10,11 @@ import { LoadingState } from '../components/LoadingState';
 import { DbInitError } from '../components/DbInitError';
 import { EasistentSyncButton } from '../components/EasistentSyncButton';
 import {
+  applyGroupChoices,
+  GROUP_CHOICES_KEY,
+  parseChoices,
+} from '../integrations/easistent/group-choice';
+import {
   addDaysToDayIso,
   dayRangeUtc,
   formatUtcInZone,
@@ -59,12 +64,19 @@ export function TimetablePage() {
       return;
     }
     try {
-      const [lessons, subjects] = await Promise.all([
+      const [lessons, subjects, choicesRaw] = await Promise.all([
         dbState.database.repos.lessons.listAll(),
         dbState.database.repos.subjects.listAll(),
+        dbState.database.repos.settings.get(GROUP_CHOICES_KEY),
       ]);
-      setData({
+      // Hide non-selected group lessons defensively (sync already filters).
+      const { lessons: filtered } = applyGroupChoices({
         lessons,
+        subjects,
+        choices: parseChoices(choicesRaw),
+      });
+      setData({
+        lessons: filtered,
         subjects: new Map(subjects.map((subject) => [subject.id, subject])),
       });
     } catch (loadError) {

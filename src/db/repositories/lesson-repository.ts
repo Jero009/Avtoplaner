@@ -9,6 +9,7 @@ interface LessonRow {
   start_utc: string;
   end_utc: string;
   status: LessonStatus;
+  note: string | null;
 }
 
 function mapRow(row: LessonRow): LessonRecord {
@@ -20,6 +21,7 @@ function mapRow(row: LessonRow): LessonRecord {
     startUtc: row.start_utc,
     endUtc: row.end_utc,
     status: row.status,
+    note: row.note,
   };
 }
 
