@@ -22,14 +22,21 @@ class SqliteDriver implements DbDriver {
   }
 
   async run(sql: string, params?: SqlValue[]): Promise<void> {
+    // transaction: false — the plugin otherwise wraps EVERY statement in its
+    // own BEGIN/COMMIT (execute/run default to transaction=true), which
+    // throws "Failed in beginTransactionAlready in transaction" on Android
+    // when called inside our explicit driver.transaction(). A single
+    // statement is atomic in SQLite regardless.
     if (params && params.length > 0) {
-      await this.conn.run(sql, params);
+      await this.conn.run(sql, params, false);
     } else {
-      await this.conn.execute(sql);
+      await this.conn.execute(sql, false);
     }
   }
 
   async executeScript(sql: string): Promise<void> {
+    // Keep the plugin's transaction wrapper here: migrations are
+    // standalone multi-statement scripts, not nested in driver.transaction().
     await this.conn.execute(sql);
   }
 
