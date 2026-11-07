@@ -71,8 +71,12 @@
   },
   "timetable": {
     "title": "Timetable",
-    "phase4Title": "Timetable is not available yet",
-    "phase4Description": "Timetable, changes and holidays arrive in Phase 4, together with school data (eAsistent or manual entry)."
+    "noLessons": "No lessons this week.",
+    "statusSubstitution": "Substitution",
+    "statusCancelled": "Cancelled",
+    "statusChanged": "Changed",
+    "insteadOf": "instead of: {{subject}}",
+    "weekOf": "Week of {{date}}"
   },
   "grades": {
     "title": "Grades",
@@ -81,8 +85,42 @@
   },
   "homework": {
     "title": "Homework",
-    "phase4Title": "Homework is not available yet",
-    "phase4Description": "The homework list with completion and filters arrives in Phase 4."
+    "open": "Open homework",
+    "doneSection": "Completed",
+    "noHomework": "No homework.",
+    "noHomeworkDone": "No completed homework.",
+    "due": "Due",
+    "markDone": "Mark as done",
+    "markUndone": "Mark as open",
+    "tests": "Announced tests",
+    "noTests": "No announced tests.",
+    "sourceEasistent": "eAsistent",
+    "sourceManual": "manual"
+  },
+  "easistent": {
+    "title": "eAsistent",
+    "description": "Pulls the timetable, homework and announced tests from eAsistent. Data is stored on this device only.",
+    "username": "Username",
+    "password": "Password",
+    "passwordKeep": "Leave empty to keep the stored password.",
+    "saveCredentials": "Save login",
+    "credentialsSaved": "Login saved.",
+    "testConnection": "Test connection",
+    "testing": "Testing …",
+    "connectionOk": "Login successful.",
+    "syncNow": "Sync now",
+    "syncing": "Syncing …",
+    "lastSync": "Last synced: {{time}}",
+    "never": "never",
+    "syncSummary": "Synced: {{lessons}} lessons, {{homework}} homework, {{tests}} tests.",
+    "errors": {
+      "missingCredentials": "Enter and save your eAsistent login first.",
+      "auth": "Invalid username or password.",
+      "network": "Connection failed. In a browser/PWA the eAsistent API is blocked by CORS — sync in the Android app.",
+      "http": "eAsistent responded with an error.",
+      "parse": "eAsistent returned an unexpected response.",
+      "unknown": "Sync failed."
+    }
   },
   "settings": {
     "title": "Settings",
@@ -97,7 +135,7 @@
     "calendarsSection": "Calendars",
     "calendarVisibility": "Calendar visibility",
     "backupSection": "Backup",
-    "backupDescription": "Export all data to a single JSON file. Importing replaces all data in the app.",
+    "backupDescription": "Export all data to a single JSON file. Importing replaces all data in the app. The eAsistent password is never included — re-enter it after importing.",
     "export": "Export backup",
     "import": "Import backup",
     "importFileSelected": "Selected file: {{name}}",

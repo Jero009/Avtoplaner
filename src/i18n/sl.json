@@ -71,8 +71,12 @@
   },
   "timetable": {
     "title": "Urnik",
-    "phase4Title": "Urnik še ni na voljo",
-    "phase4Description": "Urnik, spremembe in dopusti bodo prišli v 4. fazi, ko bodo podatki šole (eAsistent ali ročni vnos) povezani."
+    "noLessons": "Ta teden ni ur.",
+    "statusSubstitution": "Nadomeščanje",
+    "statusCancelled": "Odpadla ura",
+    "statusChanged": "Sprememba",
+    "insteadOf": "namesto: {{subject}}",
+    "weekOf": "Teden od {{date}}"
   },
   "grades": {
     "title": "Ocene",
@@ -81,8 +85,42 @@
   },
   "homework": {
     "title": "Domače naloge",
-    "phase4Title": "Domače naloge še niso na voljo",
-    "phase4Description": "Seznam nalog z opravljanjem in filtri bo prišel v 4. fazi."
+    "open": "Odprte naloge",
+    "doneSection": "Opravljene",
+    "noHomework": "Ni domačih nalog.",
+    "noHomeworkDone": "Ni opravljenih nalog.",
+    "due": "Rok",
+    "markDone": "Označi kot opravljeno",
+    "markUndone": "Označi kot odprto",
+    "tests": "Napovedana ocenjevanja",
+    "noTests": "Ni napovedanih ocenjevanj.",
+    "sourceEasistent": "eAsistent",
+    "sourceManual": "ročno"
+  },
+  "easistent": {
+    "title": "eAsistent",
+    "description": "Povleče urnik, domače naloge in napovedana ocenjevanja iz eAsistenta. Podatki so shranjeni samo na tej napravi.",
+    "username": "Uporabniško ime",
+    "password": "Geslo",
+    "passwordKeep": "Pusti prazno, če želiš obdržati shranjeno geslo.",
+    "saveCredentials": "Shrani prijavo",
+    "credentialsSaved": "Prijava je shranjena.",
+    "testConnection": "Preveri povezavo",
+    "testing": "Preverjam …",
+    "connectionOk": "Prijava uspešna.",
+    "syncNow": "Sinhroniziraj zdaj",
+    "syncing": "Sinhroniziram …",
+    "lastSync": "Zadnja sinhronizacija: {{time}}",
+    "never": "nikoli",
+    "syncSummary": "Sinhronizirano: {{lessons}} ur, {{homework}} nalog, {{tests}} ocenjevanj.",
+    "errors": {
+      "missingCredentials": "Najprej vnesi in shrani eAsistent prijavo.",
+      "auth": "Napačno uporabniško ime ali geslo.",
+      "network": "Povezava ni uspela. V brskalniku/PWA eAsistent API blokira CORS — sinhroniziraj v Android aplikaciji.",
+      "http": "eAsistent je odgovoril z napako.",
+      "parse": "eAsistent je vrnel nepričakovan odgovor.",
+      "unknown": "Sinhronizacija ni uspela."
+    }
   },
   "settings": {
     "title": "Nastavitve",
@@ -97,7 +135,7 @@
     "calendarsSection": "Koledarji",
     "calendarVisibility": "Vidnost koledarjev",
     "backupSection": "Varnostna kopija",
-    "backupDescription": "Izvozi vse podatke v eno JSON-datotiko. Uvoz zamenja vse podatke v aplikaciji.",
+    "backupDescription": "Izvozi vse podatke v eno JSON-datoteko. Uvoz zamenja vse podatke v aplikaciji. Geslo za eAsistent nikoli ni vključeno — po uvozu ga znova vnesi.",
     "export": "Izvozi varnostno kopijo",
     "import": "Uvozi varnostno kopijo",
     "importFileSelected": "Izbrana datoteka: {{name}}",

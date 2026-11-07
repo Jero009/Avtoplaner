@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Download, Upload } from 'lucide-react';
+import { Download, KeyRound, Link2, RefreshCw, Upload } from 'lucide-react';
 import { useDb } from '../app/db-context';
 import { useTheme } from '../app/theme-context';
 import type { Theme, Language } from '../utils/preferences';
 import { saveLanguage } from '../utils/preferences';
+import { formatUtcInZone } from '../utils/dates';
+import type { SyncStateRecord } from '../db/types';
 import { CalendarToggleList } from '../components/CalendarToggleList';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { LoadingState } from '../components/LoadingState';
@@ -17,6 +19,11 @@ import { latestSchemaVersion } from '../db/migration-runner';
 import type { BackupFile } from '../utils/backup';
 import type { CalendarRecord } from '../db/types';
 import { DbInitError } from '../components/DbInitError';
+import {
+  EASISTENT_PASSWORD_KEY,
+  EASISTENT_USERNAME_KEY,
+} from '../integrations/easistent/sync';
+import { useEasistentSync } from '../integrations/easistent/use-sync';
 
 const THEME_OPTIONS: readonly { value: Theme; labelKey: string }[] = [
   { value: 'light', labelKey: 'settings.themeLight' },
@@ -39,6 +46,13 @@ export function SettingsPage() {
   const [pendingImport, setPendingImport] = useState<BackupFile | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // eAsistent credentials + sync state
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordSet, setPasswordSet] = useState(false);
+  const [syncState, setSyncState] = useState<SyncStateRecord | null>(null);
+  const { syncing, testing, feedback, sync, testConnection } = useEasistentSync();
+
   const loadCalendars = useCallback(async () => {
     if (!db) {
       return;
@@ -46,9 +60,48 @@ export function SettingsPage() {
     setCalendars(await db.repos.calendars.list());
   }, [db]);
 
+  const loadEasistentState = useCallback(async () => {
+    if (!db) {
+      return;
+    }
+    const [storedUsername, storedPassword, state] = await Promise.all([
+      db.repos.settings.get(EASISTENT_USERNAME_KEY),
+      db.repos.settings.get(EASISTENT_PASSWORD_KEY),
+      db.repos.syncState.get('easistent'),
+    ]);
+    setUsername(storedUsername ?? '');
+    setPasswordSet(Boolean(storedPassword));
+    setSyncState(state);
+  }, [db]);
+
   useEffect(() => {
     void loadCalendars();
-  }, [loadCalendars]);
+    void loadEasistentState();
+  }, [loadCalendars, loadEasistentState]);
+
+  const saveCredentials = async () => {
+    if (!db || username.trim().length === 0) {
+      setStatus({ kind: 'error', text: t('easistent.errors.missingCredentials') });
+      return;
+    }
+    await db.repos.settings.set(EASISTENT_USERNAME_KEY, username.trim());
+    // Only overwrite the stored password when the user typed a new one —
+    // the field is left empty to keep the existing secret.
+    if (password.length > 0) {
+      await db.repos.settings.set(EASISTENT_PASSWORD_KEY, password);
+    }
+    setPassword('');
+    setPasswordSet(true);
+    setStatus({ kind: 'info', text: t('easistent.credentialsSaved') });
+  };
+
+  const runSync = async () => {
+    const ok = await sync();
+    if (ok) {
+      await loadEasistentState();
+      await loadCalendars();
+    }
+  };
 
   const setLanguage = (language: Language) => {
     void i18n.changeLanguage(language);
@@ -195,6 +248,106 @@ export function SettingsPage() {
               await loadCalendars();
             }}
           />
+        )}
+      </section>
+
+      <section className="card" aria-labelledby="easistent-heading">
+        <h2 id="easistent-heading" className="section-title mb-1">
+          {t('easistent.title')}
+        </h2>
+        <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+          {t('easistent.description')}
+        </p>
+        {dbState.status === 'error' ? (
+          <DbInitError />
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div>
+                <label className="label" htmlFor="easistent-username">
+                  {t('easistent.username')}
+                </label>
+                <input
+                  id="easistent-username"
+                  type="text"
+                  autoComplete="username"
+                  className="input"
+                  value={username}
+                  onChange={(event) => setUsername(event.target.value)}
+                />
+              </div>
+              <div>
+                <label className="label" htmlFor="easistent-password">
+                  {t('easistent.password')}
+                </label>
+                <input
+                  id="easistent-password"
+                  type="password"
+                  autoComplete="current-password"
+                  className="input"
+                  value={password}
+                  placeholder={passwordSet ? '••••••••' : ''}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                {passwordSet && password.length === 0 && (
+                  <p className="mt-1 text-xs text-slate-400">
+                    {t('easistent.passwordKeep')}
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => void saveCredentials()}
+                disabled={!db}
+              >
+                <KeyRound className="size-5" aria-hidden="true" />
+                {t('easistent.saveCredentials')}
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => void testConnection()}
+                disabled={!db || testing || syncing}
+              >
+                <Link2 className="size-5" aria-hidden="true" />
+                {testing ? t('easistent.testing') : t('easistent.testConnection')}
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => void runSync()}
+                disabled={!db || syncing || testing}
+              >
+                <RefreshCw
+                  className={`size-5 ${syncing ? 'animate-spin' : ''}`}
+                  aria-hidden="true"
+                />
+                {syncing ? t('easistent.syncing') : t('easistent.syncNow')}
+              </button>
+            </div>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              {t('easistent.lastSync', {
+                time: syncState?.lastSuccessUtc
+                  ? formatUtcInZone(syncState.lastSuccessUtc, 'd.M.yyyy HH:mm')
+                  : t('easistent.never'),
+              })}
+            </p>
+            {feedback && (
+              <p
+                role="status"
+                className={`text-sm ${
+                  feedback.kind === 'error'
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-green-700 dark:text-green-400'
+                }`}
+              >
+                {feedback.text}
+              </p>
+            )}
+          </div>
         )}
       </section>
 

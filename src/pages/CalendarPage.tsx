@@ -105,6 +105,22 @@ export function CalendarPage() {
         const colorOf = (calendarId: string): string =>
           calendars?.find((calendar) => calendar.id === calendarId)?.color ??
           '#2563eb';
+        // eAsistent rows carry their kind in the external-id prefix so the
+        // calendar can style them without extra schema.
+        const extraClassNames = (record: EventRecord): string[] => {
+          if (record.source !== 'easistent') {
+            return [];
+          }
+          const classes = ['easistent-event'];
+          if (record.externalId?.startsWith('ea-test:')) {
+            classes.push('easistent-test');
+          } else if (record.externalId?.startsWith('ea-cancelled:')) {
+            classes.push('easistent-cancelled');
+          } else if (record.externalId?.startsWith('ea-event:')) {
+            classes.push('easistent-change');
+          }
+          return classes;
+        };
         successCallback(
           visible.map((record) => ({
             id: record.id,
@@ -114,9 +130,10 @@ export function CalendarPage() {
             allDay: record.allDay,
             backgroundColor: colorOf(record.calendarId),
             borderColor: colorOf(record.calendarId),
-            classNames: conflictIds.current.has(record.id)
-              ? ['conflict-event']
-              : [],
+            classNames: [
+              ...(conflictIds.current.has(record.id) ? ['conflict-event'] : []),
+              ...extraClassNames(record),
+            ],
           })),
         );
       } catch (error) {

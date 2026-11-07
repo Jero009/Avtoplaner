@@ -112,3 +112,24 @@ html {
   outline: 2px dashed #dc2626;
   outline-offset: -2px;
 }
+
+/* eAsistent-sourced events: striped, so they read differently from local
+   events even when both calendars are visible. */
+.fc-event.easistent-event {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.14) 0 6px,
+    transparent 6px 12px
+  );
+  border-left: 3px solid rgba(255, 255, 255, 0.65);
+}
+.fc-event.easistent-test {
+  font-weight: 700;
+}
+.fc-event.easistent-cancelled {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+.fc-event.easistent-change {
+  font-style: italic;
+}
