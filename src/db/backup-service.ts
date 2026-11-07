@@ -74,6 +74,9 @@ export async function replaceAllTables(
   const deleteOrder = [...childrenFirst, ...parentsFirst, ...standalone];
   const insertOrder = [...parentsFirst, ...childrenFirst, ...standalone];
 
+  // Note: on the web plugin every statement auto-commits, so this restore is
+  // not atomic across calls there (native is transactional). A failed import
+  // may leave partial data on web; the caller should verify and re-import.
   await driver.transaction(async () => {
     for (const table of deleteOrder) {
       await driver.run(`DELETE FROM ${table}`);

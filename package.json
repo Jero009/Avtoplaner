@@ -1,13 +1,13 @@
 {
   "name": "autoplaner",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "predev": "node scripts/copy-sqlite-wasm.mjs",
     "dev": "vite",
     "prebuild": "node scripts/copy-sqlite-wasm.mjs",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && node scripts/copy-sqlite-wasm.mjs && vite build",
     "lint": "eslint .",
     "test": "vitest run",
     "preview": "vite preview",
@@ -45,6 +45,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.14.0",
+    "sql.js": "1.11.0",
     "tailwindcss": "^4.3.5",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.72.1",

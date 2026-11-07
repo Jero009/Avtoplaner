@@ -7,7 +7,6 @@ import type { Theme, Language } from '../utils/preferences';
 import { saveLanguage } from '../utils/preferences';
 import { CalendarToggleList } from '../components/CalendarToggleList';
 import { ConfirmDialog } from '../components/ConfirmDialog';
-import { ErrorState } from '../components/ErrorState';
 import { LoadingState } from '../components/LoadingState';
 import { buildBackup, validateBackup } from '../utils/backup';
 import {
@@ -17,6 +16,7 @@ import {
 import { latestSchemaVersion } from '../db/migration-runner';
 import type { BackupFile } from '../utils/backup';
 import type { CalendarRecord } from '../db/types';
+import { DbInitError } from '../components/DbInitError';
 
 const THEME_OPTIONS: readonly { value: Theme; labelKey: string }[] = [
   { value: 'light', labelKey: 'settings.themeLight' },
@@ -182,7 +182,7 @@ export function SettingsPage() {
         <h2 id="calendars-heading" className="section-title mb-3">
           {t('settings.calendarVisibility')}
         </h2>
-        {dbState.status === 'error' && <ErrorState message={t('db.initError')} />}
+        {dbState.status === 'error' && <DbInitError />}
         {calendars === null && dbState.status !== 'error' && <LoadingState />}
         {calendars !== null && (
           <CalendarToggleList

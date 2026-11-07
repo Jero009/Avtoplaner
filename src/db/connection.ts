@@ -34,13 +34,30 @@ class SqliteDriver implements DbDriver {
   }
 
   async transaction<T>(fn: () => Promise<T>): Promise<T> {
-    await this.conn.beginTransaction();
+    // The plugin wraps every execute/run call in its own transaction on web
+    // (verified: begin/commit bookkeeping fails with "no transaction is
+    // active" because each statement auto-commits). Never let that
+    // bookkeeping failure mask the real error from `fn`.
+    let began = true;
+    try {
+      await this.conn.beginTransaction();
+    } catch {
+      began = false;
+    }
     try {
       const result = await fn();
-      await this.conn.commitTransaction();
+      if (began) {
+        await this.conn.commitTransaction();
+      }
       return result;
     } catch (error) {
-      await this.conn.rollbackTransaction();
+      if (began) {
+        try {
+          await this.conn.rollbackTransaction();
+        } catch {
+          // The plugin already auto-committed or had no active transaction.
+        }
+      }
       throw error;
     }
   }
@@ -50,8 +67,14 @@ async function initializeWebStore(sqlite: SQLiteConnection): Promise<void> {
   const { defineCustomElements } = await import('jeep-sqlite/loader');
   defineCustomElements(window);
   if (document.querySelector('jeep-sqlite') === null) {
-    const element = document.createElement('jeep-sqlite');
+    const element = document.createElement(
+      'jeep-sqlite',
+    ) as HTMLElement & { autoSave?: boolean };
     // Persist the in-memory sql.js database to IndexedDB after every write.
+    // The Stencil prop must be set directly — the `auto-save` attribute
+    // alone did not enable autoSave (verified: attribute set but
+    // `element.autoSave` stayed false and nothing was persisted).
+    element.autoSave = true;
     element.setAttribute('auto-save', 'true');
     document.body.appendChild(element);
   }

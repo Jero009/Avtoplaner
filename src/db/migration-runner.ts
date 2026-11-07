@@ -50,7 +50,13 @@ async function readSchemaVersion(driver: DbDriver): Promise<number> {
 
 /**
  * Apply every migration newer than the stored `meta.schema_version`.
- * Each migration runs in its own transaction and records its version.
+ *
+ * Each migration runs as ONE `executeScript` call with the version stamp
+ * appended. The plugin wraps a single execute call in its own
+ * transaction (verified: cross-call transactions auto-commit per
+ * statement), so a single combined script is the only unit of atomicity
+ * the plugin reliably provides on every platform — a failure mid-script
+ * rolls back the whole migration including the version stamp.
  */
 export async function runMigrations(driver: DbDriver): Promise<number> {
   const migrations = collectMigrations(migrationFiles);
@@ -59,13 +65,10 @@ export async function runMigrations(driver: DbDriver): Promise<number> {
     if (migration.version <= current) {
       continue;
     }
-    await driver.transaction(async () => {
-      await driver.executeScript(migration.sql);
-      await driver.run(
-        "INSERT OR REPLACE INTO meta (key, value) VALUES ('schema_version', ?)",
-        [String(migration.version)],
-      );
-    });
+    const stampSql =
+      "INSERT OR REPLACE INTO meta (key, value) VALUES ('schema_version', " +
+      `'${migration.version}');`;
+    await driver.executeScript(`${migration.sql}\n${stampSql}`);
   }
   return latestSchemaVersion();
 }

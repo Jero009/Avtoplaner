@@ -25,6 +25,7 @@ import { ErrorState } from '../components/ErrorState';
 import { LoadingState } from '../components/LoadingState';
 import { findConflictingIds } from '../utils/conflicts';
 import { toDateTimeLocalValue } from '../utils/dates';
+import { DbInitError } from '../components/DbInitError';
 
 type ViewKey = 'day' | 'week' | 'month' | 'agenda';
 
@@ -207,7 +208,7 @@ export function CalendarPage() {
     return (
       <>
         <h1 className="mb-4 text-xl font-semibold">{t('calendar.title')}</h1>
-        <ErrorState message={t('db.initError')} />
+        <DbInitError />
       </>
     );
   }
@@ -298,7 +299,10 @@ export function CalendarPage() {
           allDayText={t('dashboard.allDay')}
           locale={i18n.language === 'sl' ? slLocale : enLocale}
           eventTimeFormat={{ hour: '2-digit', minute: '2-digit', hour12: false }}
-          dayHeaderFormat={{ weekday: 'short', day: 'numeric', month: 'numeric' }}
+          // No dayHeaderFormat override: setting month/day here triggers the
+          // known FullCalendar bug where dayGridMonth renders wrong dates in
+          // the column headers (fullcalendar/fullcalendar#5854, #7613). The
+          // per-view defaults format every view correctly.
           datesSet={(arg) => {
             setTitle(
               new Intl.DateTimeFormat(i18n.language, {

@@ -15,6 +15,7 @@ import {
   formatUtcInZone,
   todayDayIso,
 } from '../utils/dates';
+import { DbInitError } from '../components/DbInitError';
 
 interface DashboardData {
   calendars: CalendarRecord[];
@@ -71,7 +72,7 @@ export function DashboardPage() {
     return (
       <>
         <h1 className="mb-4 text-xl font-semibold">{t('dashboard.title')}</h1>
-        <ErrorState message={t('db.initError')} />
+        <DbInitError />
       </>
     );
   }
