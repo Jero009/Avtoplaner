@@ -24,6 +24,10 @@ function mapRow(row: CalendarRow): CalendarRecord {
 export const LOCAL_CALENDAR_ID = 'local';
 const LOCAL_CALENDAR_COLOR = '#2563eb';
 
+/** The calendar all eAsistent-sourced events land in. */
+export const EASISTENT_CALENDAR_ID = 'easistent';
+export const EASISTENT_CALENDAR_COLOR = '#059669';
+
 export function createCalendarRepository(db: DbDriver) {
   return {
     async list(): Promise<CalendarRecord[]> {
@@ -57,6 +61,18 @@ export function createCalendarRepository(db: DbDriver) {
         `INSERT OR IGNORE INTO calendars (id, source, external_id, name, color, visible)
          VALUES (?, 'local', 'local', 'Local', ?, 1)`,
         [LOCAL_CALENDAR_ID, LOCAL_CALENDAR_COLOR],
+      );
+    },
+
+    /**
+     * Make sure the eAsistent calendar exists (created on first sync).
+     * INSERT OR IGNORE keeps the user's visibility choice across syncs.
+     */
+    async ensureEasistentCalendar(): Promise<void> {
+      await db.run(
+        `INSERT OR IGNORE INTO calendars (id, source, external_id, name, color, visible)
+         VALUES (?, 'easistent', 'easistent', 'eAsistent', ?, 1)`,
+        [EASISTENT_CALENDAR_ID, EASISTENT_CALENDAR_COLOR],
       );
     },
   };

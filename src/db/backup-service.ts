@@ -1,4 +1,5 @@
 import type { DbDriver, SqlValue } from './driver';
+import { REDACTED_SETTING_KEYS } from '../integrations/easistent/sync';
 
 /**
  * Tables included in a backup, with their column order. Insert/delete order
@@ -31,15 +32,24 @@ export const BACKUP_TABLES: Record<string, readonly string[]> = {
   meta: ['key', 'value'],
 };
 
-/** Read every backed-up table. Used by backup export. */
+/** Read every backed-up table. Used by backup export.
+ *
+ * Settings rows holding secrets are redacted: the eAsistent password must
+ * never leave the device in a backup file (the username stays, so the user
+ * only has to re-enter the password after an import).
+ */
 export async function exportAllTables(
   driver: DbDriver,
 ): Promise<Record<string, Record<string, SqlValue>[]>> {
   const data: Record<string, Record<string, SqlValue>[]> = {};
   for (const table of Object.keys(BACKUP_TABLES)) {
-    data[table] = await driver.select<Record<string, SqlValue>>(
+    const rows = await driver.select<Record<string, SqlValue>>(
       `SELECT * FROM ${table}`,
     );
+    data[table] =
+      table === 'settings'
+        ? rows.filter((row) => !REDACTED_SETTING_KEYS.includes(String(row.key)))
+        : rows;
   }
   return data;
 }
