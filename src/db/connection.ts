@@ -108,14 +108,15 @@ async function initialize(): Promise<DbDriver> {
     try {
       conn = await sqlite.createConnection(DB_NAME, false, 'no-encryption', 1, false);
     } catch (error) {
-      // Concurrent init: another caller registered the connection between our
-      // isConnection check and createConnection (both ran before either
-      // registered). The plugin then rejects createConnection with
-      // "CreateConnection: Connection <name> already exists" and the app
-      // rendered "database could not be opened" everywhere. Recover by
-      // retrieving the connection the other caller created.
       if (String(error).includes('already exists')) {
-        conn = await sqlite.retrieveConnection(DB_NAME, false);
+        // A WebView reload (PWA service-worker update) wipes this JS
+        // instance's connection registry while the NATIVE plugin still holds
+        // the connection from the previous page: createConnection then
+        // rejects with "already exists" and retrieveConnection fails with
+        // "does not exist" (registry is empty). Close the native connection
+        // and create a fresh one.
+        await CapacitorSQLite.closeConnection({ database: DB_NAME, readonly: false });
+        conn = await sqlite.createConnection(DB_NAME, false, 'no-encryption', 1, false);
       } else {
         throw error;
       }
