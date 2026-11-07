@@ -52,7 +52,7 @@ export function AppShell() {
 
   return (
     <div className="flex min-h-dvh flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-      <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-slate-200 bg-white px-3 dark:border-slate-800 dark:bg-slate-900">
+      <header className="sticky top-0 z-30 flex h-[calc(3.5rem+env(safe-area-inset-top))] items-center gap-2 border-b border-slate-200 bg-white px-3 pt-[env(safe-area-inset-top)] dark:border-slate-800 dark:bg-slate-900">
         <button
           type="button"
           onClick={toggleSidebar}
@@ -146,7 +146,7 @@ export function AppShell() {
 
       <nav
         aria-label={t('nav.menu')}
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-slate-200 bg-white md:hidden dark:border-slate-800 dark:bg-slate-900"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden dark:border-slate-800 dark:bg-slate-900"
       >
         {NAV_ITEMS.map((item) => (
           <NavLink
