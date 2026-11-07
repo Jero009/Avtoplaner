@@ -1,25 +1,42 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CalendarDays, BookOpen } from 'lucide-react';
+import { CalendarDays, BookOpen, Plus } from 'lucide-react';
 import { useDb } from '../app/db-context';
 import { useOnline } from '../app/use-online';
-import type { CalendarRecord, EventRecord, HomeworkRecord } from '../db/types';
+import type {
+  CalendarRecord,
+  EventRecord,
+  HomeworkRecord,
+  LessonRecord,
+  SubjectRecord,
+} from '../db/types';
+import type { EventDraft } from '../db/repositories/event-repository';
 import { EmptyState } from '../components/EmptyState';
 import { ErrorState } from '../components/ErrorState';
 import { LoadingState } from '../components/LoadingState';
 import { EventListItem } from '../components/EventListItem';
+import { EventForm } from '../components/EventForm';
+import { DayTimeline } from '../components/DayTimeline';
+import { DbInitError } from '../components/DbInitError';
 import { findConflictingIds } from '../utils/conflicts';
+import { buildTimelineBlocks } from '../utils/timeline';
+import {
+  applyGroupChoices,
+  GROUP_CHOICES_KEY,
+  parseChoices,
+} from '../integrations/easistent/group-choice';
 import {
   addDaysToDayIso,
   dayRangeUtc,
   formatUtcInZone,
   todayDayIso,
 } from '../utils/dates';
-import { DbInitError } from '../components/DbInitError';
 
 interface DashboardData {
   calendars: CalendarRecord[];
   events: EventRecord[];
+  lessons: LessonRecord[];
+  subjects: SubjectRecord[];
   homework: HomeworkRecord[];
 }
 
@@ -30,24 +47,47 @@ export function DashboardPage() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [dayOffset, setDayOffset] = useState(0);
+  const [formOpen, setFormOpen] = useState<string | null>(null);
+
+  const today = todayDayIso();
+  const viewedDay = addDaysToDayIso(today, dayOffset);
 
   const load = useCallback(async () => {
     if (dbState.status !== 'ready') {
       return;
     }
     try {
-      const today = todayDayIso();
-      const weekRange = dayRangeUtc(addDaysToDayIso(today, 7));
-      const todayRange = dayRangeUtc(today);
-      const [calendars, events, homework] = await Promise.all([
+      const todayIso = todayDayIso();
+      const weekRange = dayRangeUtc(addDaysToDayIso(todayIso, 7));
+      const todayRange = dayRangeUtc(todayIso);
+      const [calendars, events, homework, lessons, subjects, choicesRaw] = await Promise.all([
         dbState.database.repos.calendars.list(),
         dbState.database.repos.events.listBetween(
           todayRange.startUtc,
           weekRange.endUtc,
         ),
-        dbState.database.repos.homework.listDueBetween(today, addDaysToDayIso(today, 7)),
+        dbState.database.repos.homework.listDueBetween(todayIso, addDaysToDayIso(todayIso, 7)),
+        dbState.database.repos.lessons.listAll(),
+        dbState.database.repos.subjects.listAll(),
+        dbState.database.repos.settings.get(GROUP_CHOICES_KEY),
       ]);
-      setData({ calendars, events, homework });
+      // Defensively hide non-selected group rows at render time (the sync
+      // already keeps them out of the DB; this covers rows synced before
+      // the choice was made).
+      const { events: filteredEvents, lessons: filteredLessons } = applyGroupChoices({
+        lessons,
+        events,
+        subjects,
+        choices: parseChoices(choicesRaw),
+      });
+      setData({
+        calendars,
+        events: filteredEvents,
+        lessons: filteredLessons,
+        subjects,
+        homework,
+      });
     } catch (loadError) {
       setError(
         loadError instanceof Error ? loadError.message : String(loadError),
@@ -59,30 +99,29 @@ export function DashboardPage() {
     void load();
   }, [load, reloadKey]);
 
-  if (dbState.status === 'loading') {
-    return (
-      <>
-        <h1 className="mb-4 text-xl font-semibold">{t('dashboard.title')}</h1>
-        <LoadingState label={t('db.loadingDb')} />
-      </>
-    );
-  }
-
-  if (dbState.status === 'error') {
-    return (
-      <>
-        <h1 className="mb-4 text-xl font-semibold">{t('dashboard.title')}</h1>
-        <DbInitError />
-      </>
-    );
-  }
-
   const colorOf = (calendarId: string): string =>
     data?.calendars.find((calendar) => calendar.id === calendarId)?.color ??
     '#2563eb';
 
-  const today = todayDayIso();
   const todayRange = dayRangeUtc(today);
+  const viewedRange = dayRangeUtc(viewedDay);
+
+  const dayBlocks = useMemo(
+    () =>
+      data
+        ? buildTimelineBlocks(
+            data.events.filter(
+              (event) =>
+                event.startUtc < viewedRange.endUtc && event.endUtc > viewedRange.startUtc,
+            ),
+            data.lessons,
+            data.subjects,
+            data.calendars,
+          )
+        : [],
+    [data, viewedRange.startUtc, viewedRange.endUtc],
+  );
+
   const conflictIds = data ? findConflictingIds(data.events) : new Set<string>();
   const todayEvents =
     data?.events.filter(
@@ -102,16 +141,41 @@ export function DashboardPage() {
       timeZone: 'Europe/Ljubljana',
     }).format(new Date(`${dayIso}T12:00:00Z`));
 
+  const createEvent = async (draft: EventDraft) => {
+    if (dbState.status !== 'ready') {
+      return;
+    }
+    await dbState.database.repos.events.createLocal(draft);
+    setFormOpen(null);
+    setReloadKey((key) => key + 1);
+  };
+
+  if (dbState.status === 'loading') {
+    return (
+      <>
+        <h1 className="mb-4 text-xl font-semibold">{t('dashboard.title')}</h1>
+        <LoadingState label={t('db.loadingDb')} />
+      </>
+    );
+  }
+
+  if (dbState.status === 'error') {
+    return (
+      <>
+        <h1 className="mb-4 text-xl font-semibold">{t('dashboard.title')}</h1>
+        <DbInitError />
+      </>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-xl font-semibold">{t('dashboard.title')}</h1>
-
       {error && (
         <ErrorState
           message={error}
           onRetry={() => {
             setError(null);
-            setReloadKey((k) => k + 1);
+            setReloadKey((key) => key + 1);
           }}
         />
       )}
@@ -124,6 +188,17 @@ export function DashboardPage() {
 
       {data && (
         <>
+          {/* The day timeline IS the home view; the previous dashboard
+              sections follow below it. */}
+          <DayTimeline
+            dayIso={viewedDay}
+            blocks={dayBlocks}
+            isToday={viewedDay === today}
+            onPrevDay={() => setDayOffset((offset) => offset - 1)}
+            onNextDay={() => setDayOffset((offset) => offset + 1)}
+            onToday={() => setDayOffset(0)}
+          />
+
           <section className="card" aria-labelledby="today-heading">
             <h2 id="today-heading" className="section-title mb-2">
               {t('dashboard.todayEvents')}
@@ -192,8 +267,31 @@ export function DashboardPage() {
           </section>
         </>
       )}
+
+      <button
+        type="button"
+        className="fixed bottom-24 right-4 z-40 flex size-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 md:bottom-8 dark:bg-blue-500 dark:hover:bg-blue-400"
+        onClick={() => setFormOpen(`${viewedDay}T${prefillHour()}`)}
+        aria-label={t('timeline.newEvent')}
+      >
+        <Plus className="size-7" aria-hidden="true" />
+      </button>
+
+      {formOpen && (
+        <EventForm
+          event={null}
+          prefillStart={formOpen}
+          onSubmit={createEvent}
+          onCancel={() => setFormOpen(null)}
+        />
+      )}
     </div>
   );
+}
+
+/** Wall-clock hour (HH:00) in Ljubljana to prefill the FAB event form with. */
+function prefillHour(): string {
+  return `${formatUtcInZone(new Date().toISOString(), 'HH')}:00`;
 }
 
 function groupByDay(events: EventRecord[]): [string, EventRecord[]][] {
