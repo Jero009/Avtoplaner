@@ -17,6 +17,18 @@ and a PWA build. Data is stored locally; there is no Autoplaner backend.
   tests), shown in the calendar, timetable and homework pages. Android only
   for syncing — the browser/PWA is blocked by CORS and shows a clear error.
   Grades, Google Calendar and notifications are not enabled yet.
+- **Device calendar + background sync (v1.3):** synced eAsistent data can
+  be written into an Android device calendar (CalendarProvider — works with
+  Fossify/DAVx⁵, no Google API) via a purpose-built Capacitor plugin
+  (`DeviceCalendarPlugin.java`). Idempotent: a SQLite mapping table
+  (`device_calendar_map`) updates events in place and deletes them when the
+  source disappears; cancelled hours are written marked with ❌, tests as
+  `🧪 <subject> — <topic>`, homework as `📝 <subject> — domača naloga` at
+  the owning lesson hour. Group-picker choices are respected (non-selected
+  groups never leave the app). eAsistent also auto-syncs on app open when
+  the last sync is >6 h old and daily in the background
+  (@transistorsoft/capacitor-background-fetch / WorkManager, network-only,
+  silent failures). Web/PWA shows an explanatory note instead.
 
 Pre-development prerequisites and their status are tracked in
 [`docs/pre-development.md`](docs/pre-development.md).
