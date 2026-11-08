@@ -22,6 +22,7 @@ export const BACKUP_TABLES: Record<string, readonly string[]> = {
     'all_day',
     'recurring',
     'updated_at',
+    'subject_id',
   ],
   lessons: ['id', 'subject_id', 'teacher', 'classroom', 'start_utc', 'end_utc', 'status', 'note'],
   grades: ['id', 'subject_id', 'value', 'weight', 'date', 'note', 'source'],

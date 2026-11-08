@@ -25,6 +25,7 @@ interface EventRow {
   all_day: number;
   recurring: number;
   updated_at: string;
+  subject_id: string | null;
 }
 
 function mapRow(row: EventRow): EventRecord {
@@ -41,6 +42,7 @@ function mapRow(row: EventRow): EventRecord {
     allDay: row.all_day === 1,
     recurring: row.recurring === 1,
     updatedAt: row.updated_at,
+    subjectId: row.subject_id ?? null,
   };
 }
 
@@ -72,13 +74,14 @@ function insertParams(
     draft.endUtc,
     draft.allDay ? 1 : 0,
     updatedAt,
+    null,
   ];
 }
 
 const INSERT_SQL = `INSERT INTO events
   (id, calendar_id, source, external_id, title, description, location,
-   start_utc, end_utc, all_day, updated_at)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+   start_utc, end_utc, all_day, updated_at, subject_id)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 export function createEventRepository(db: DbDriver) {
   return {
@@ -113,6 +116,7 @@ export function createEventRepository(db: DbDriver) {
         source: 'local',
         externalId: id,
         recurring: false,
+        subjectId: null,
         ...draft,
         title: draft.title.trim(),
         updatedAt,

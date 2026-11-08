@@ -173,8 +173,8 @@ async function replaceEasistentRows(
   for (const event of parsed.events) {
     await driver.run(
       `INSERT INTO events (id, calendar_id, source, external_id, title, description,
-        location, start_utc, end_utc, all_day, recurring, updated_at)
-       VALUES (?, 'easistent', 'easistent', ?, ?, ?, ?, ?, ?, 0, 0, ?)`,
+        location, start_utc, end_utc, all_day, recurring, updated_at, subject_id)
+       VALUES (?, 'easistent', 'easistent', ?, ?, ?, ?, ?, ?, 0, 0, ?, ?)`,
       [
         event.externalId,
         event.externalId,
@@ -184,6 +184,7 @@ async function replaceEasistentRows(
         event.startUtc,
         event.endUtc,
         updatedAt,
+        event.subjectId,
       ],
     );
   }

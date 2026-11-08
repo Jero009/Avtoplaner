@@ -31,6 +31,8 @@ export interface EventRecord {
   allDay: boolean;
   recurring: boolean;
   updatedAt: string;
+  /** Owning subject (eAsistent events), null for local/manual events. */
+  subjectId: string | null;
 }
 
 export interface SubjectRecord {
