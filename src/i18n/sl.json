@@ -137,7 +137,9 @@
       "http": "eAsistent je odgovoril z napako.",
       "parse": "eAsistent je vrnel nepričakovan odgovor.",
       "unknown": "Sinhronizacija ni uspela."
-    }
+    },
+    "backgroundSync": "Sinhroniziraj v ozadju",
+    "backgroundSyncHint": "Dnevno samodejno posodabljanje prek Androida (WorkManager), tudi ko aplikacija ni odprta. Napake se pokažejo ob naslednjem zagonu."
   },
   "settings": {
     "title": "Nastavitve",
@@ -171,6 +173,33 @@
       "missingData": "V datoteki manjkajo podatki.",
       "invalidTable": "Tabela „{{table}}“ v datoteki je neveljavna.",
       "importFailed": "Uvoz ni uspel."
+    }
+  },
+  "deviceCalendar": {
+    "deviceCalendar": {
+      "title": "Koledar",
+      "description": "Zapiše eAsistent podatke (ure, ocenjevanja, domače naloge) v koledar na tej napravi — deluje s Fossify/DAVx⁵ in vsakim koledarjem Androida, brez Google računa.",
+      "webOnly": "Pisanje v koledar naprave je na voljo samo v Android aplikaciji.",
+      "target": "Ciljni koledar",
+      "pick": "— izberi —",
+      "pickFirst": "Najprej izberi ciljni koledar.",
+      "noCalendars": "Na napravi ni koledarja, v katerega je mogoče pisati.",
+      "create": "Ustvari koledar Avtoplaner",
+      "created": "Koledar Avtoplaner je ustvarjen in izbran.",
+      "refresh": "Osveži seznam",
+      "write": "Zapiši v koledar",
+      "sync": "Uskladi koledar",
+      "syncing": "Usklajam …",
+      "removeAll": "Odstrani iz koledarja",
+      "removeConfirmTitle": "Odstranim vnose iz koledarja?",
+      "removeConfirmMessage": "Vsi vnosi, ki jih je zapisal Avtoplaner, bodo odstranjeni iz koledarjev na tej napravi.",
+      "removed": "Odstranjenih vnosov: {{count}}.",
+      "lastWrite": "Zadnji zapis: {{time}}",
+      "permissionDenied": "Dostop do koledarja je zavrnjen. Omogoči ga v Nastavitve → Aplikacije → Avtoplaner → Dovoljenja → Koledar.",
+      "summary": "Zapisano: {{created}} novih, {{updated}} posodobljenih, {{deleted}} odstranjenih (v koledarju: {{total}}).",
+      "syncFailed": "Pisanje v koledar ni uspelo.",
+      "homeworkLabel": "domača naloga",
+      "cancelledLabel": "Odpadla ura"
     }
   },
   "db": {

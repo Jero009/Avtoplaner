@@ -8,6 +8,9 @@ import { ErrorState } from '../components/ErrorState';
 import { LoadingState } from '../components/LoadingState';
 import { DbInitError } from '../components/DbInitError';
 import { EasistentSyncButton } from '../components/EasistentSyncButton';
+import { createNativeCalendarAdapter } from '../integrations/device-calendar/plugin';
+import { syncDeviceCalendarIfEnabled } from '../integrations/device-calendar/sync';
+import { calendarLabels } from '../integrations/device-calendar/labels';
 import { formatUtcInZone } from '../utils/dates';
 
 interface HomeworkPageData {
@@ -82,6 +85,18 @@ export function HomeworkPage() {
   const toggleDone = async (item: HomeworkRecord) => {
     await dbState.database.repos.homework.setDone(item.id, !item.done);
     setReloadKey((key) => key + 1);
+    // Keep the device calendar in step: a done homework's event must
+    // disappear (and an un-done one reappear) without waiting for a sync.
+    try {
+      await syncDeviceCalendarIfEnabled(
+        dbState.database.driver,
+        dbState.database.repos,
+        createNativeCalendarAdapter(),
+        await calendarLabels(),
+      );
+    } catch {
+      // Device-calendar mirroring is best-effort; the next sync reconciles.
+    }
   };
 
   const open = data?.homework.filter((item) => !item.done) ?? [];

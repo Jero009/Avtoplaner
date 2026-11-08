@@ -8,6 +8,9 @@ import {
   syncWithStoredCredentials,
 } from './sync';
 import { createEasistentClient } from './client';
+import { createNativeCalendarAdapter } from '../device-calendar/plugin';
+import { syncDeviceCalendarIfEnabled } from '../device-calendar/sync';
+import { calendarLabels } from '../device-calendar/labels';
 
 export type EasistentFeedback = { kind: 'info' | 'error'; text: string } | null;
 
@@ -82,6 +85,18 @@ export function useEasistentSync() {
     try {
       const { driver, repos } = dbState.database;
       const result = await syncWithStoredCredentials(driver, repos);
+      // When a device calendar is configured, mirror the fresh data into
+      // it right away (idempotent; failures must not fail the sync).
+      try {
+        await syncDeviceCalendarIfEnabled(
+          driver,
+          repos,
+          createNativeCalendarAdapter(),
+          await calendarLabels(),
+        );
+      } catch (error) {
+        console.warn('[device-calendar] post-sync write failed', error);
+      }
       setFeedback({
         kind: 'info',
         text: t('easistent.syncSummary', {
