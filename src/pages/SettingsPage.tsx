@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Capacitor } from '@capacitor/core';
 import { Download, KeyRound, Link2, RefreshCw, Upload } from 'lucide-react';
 import { useDb } from '../app/db-context';
 import { useTheme } from '../app/theme-context';
@@ -25,6 +26,12 @@ import {
   EASISTENT_USERNAME_KEY,
 } from '../integrations/easistent/sync';
 import { useEasistentSync } from '../integrations/easistent/use-sync';
+import {
+  BACKGROUND_SYNC_KEY,
+  backgroundSyncEnabled,
+  setBackgroundSyncSchedule,
+} from '../integrations/easistent/background';
+import { DeviceCalendarSection } from '../components/DeviceCalendarSection';
 
 const THEME_OPTIONS: readonly { value: Theme; labelKey: string }[] = [
   { value: 'light', labelKey: 'settings.themeLight' },
@@ -52,7 +59,9 @@ export function SettingsPage() {
   const [password, setPassword] = useState('');
   const [passwordSet, setPasswordSet] = useState(false);
   const [syncState, setSyncState] = useState<SyncStateRecord | null>(null);
+  const [backgroundSync, setBackgroundSync] = useState<boolean | null>(null);
   const { syncing, testing, feedback, sync, testConnection } = useEasistentSync();
+  const isAndroid = Capacitor.getPlatform() === 'android';
 
   const loadCalendars = useCallback(async () => {
     if (!db) {
@@ -65,14 +74,16 @@ export function SettingsPage() {
     if (!db) {
       return;
     }
-    const [storedUsername, storedPassword, state] = await Promise.all([
+    const [storedUsername, storedPassword, state, backgroundRaw] = await Promise.all([
       db.repos.settings.get(EASISTENT_USERNAME_KEY),
       db.repos.settings.get(EASISTENT_PASSWORD_KEY),
       db.repos.syncState.get('easistent'),
+      db.repos.settings.get(BACKGROUND_SYNC_KEY),
     ]);
     setUsername(storedUsername ?? '');
     setPasswordSet(Boolean(storedPassword));
     setSyncState(state);
+    setBackgroundSync(backgroundSyncEnabled(backgroundRaw, Boolean(storedPassword)));
   }, [db]);
 
   useEffect(() => {
@@ -102,6 +113,16 @@ export function SettingsPage() {
       await loadEasistentState();
       await loadCalendars();
     }
+  };
+
+  const toggleBackgroundSync = async () => {
+    if (!db || backgroundSync === null) {
+      return;
+    }
+    const next = !backgroundSync;
+    setBackgroundSync(next);
+    await db.repos.settings.set(BACKGROUND_SYNC_KEY, next ? '1' : '0');
+    await setBackgroundSyncSchedule(next);
   };
 
   const setLanguage = (language: Language) => {
@@ -331,6 +352,23 @@ export function SettingsPage() {
                 {syncing ? t('easistent.syncing') : t('easistent.syncNow')}
               </button>
             </div>
+            {isAndroid && backgroundSync !== null && (
+              <div className="flex flex-col gap-1">
+                <label className="flex items-center gap-2 text-sm">
+                  <input
+                    type="checkbox"
+                    className="size-4 accent-blue-600"
+                    checked={backgroundSync}
+                    disabled={!db || !passwordSet}
+                    onChange={() => void toggleBackgroundSync()}
+                  />
+                  <span>{t('easistent.backgroundSync')}</span>
+                </label>
+                <p className="text-xs text-slate-400">
+                  {t('easistent.backgroundSyncHint')}
+                </p>
+              </div>
+            )}
             <p className="text-sm text-slate-500 dark:text-slate-400">
               {t('easistent.lastSync', {
                 time: syncState?.lastSuccessUtc
@@ -353,6 +391,8 @@ export function SettingsPage() {
           </div>
         )}
       </section>
+
+      <DeviceCalendarSection />
 
       <section className="card" aria-labelledby="backup-heading">
         <h2 id="backup-heading" className="section-title mb-1">

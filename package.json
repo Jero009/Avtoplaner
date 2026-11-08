@@ -23,6 +23,7 @@
     "@fullcalendar/list": "~6.1.22",
     "@fullcalendar/react": "~6.1.22",
     "@fullcalendar/timegrid": "~6.1.22",
+    "@transistorsoft/capacitor-background-fetch": "^8.1.4",
     "date-fns": "^4.4.0",
     "date-fns-tz": "^3.2.0",
     "i18next": "^26.7.2",

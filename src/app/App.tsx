@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { AppShell } from './app-shell';
+import { AutoSyncOnOpen } from './auto-sync';
 import { DashboardPage } from '../pages/DashboardPage';
 import { CalendarPage } from '../pages/CalendarPage';
 import { TimetablePage } from '../pages/TimetablePage';
@@ -10,6 +11,7 @@ import { SettingsPage } from '../pages/SettingsPage';
 export function App() {
   return (
     <BrowserRouter>
+      <AutoSyncOnOpen />
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<DashboardPage />} />
