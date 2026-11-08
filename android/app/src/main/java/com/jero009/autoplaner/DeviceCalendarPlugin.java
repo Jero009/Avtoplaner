@@ -57,8 +57,6 @@ import java.util.UUID;
 )
 public class DeviceCalendarPlugin extends Plugin {
 
-    /** Marker we stamp on every event we create (SYNC_DATA1). */
-    private static final String SYNC_MARKER = "autoplaner";
     private static final String LOCAL_ACCOUNT = "Avtoplaner";
 
     @PluginMethod
@@ -252,7 +250,8 @@ public class DeviceCalendarPlugin extends Plugin {
         // "eventTimezone" is its CalendarContract column name.
         values.put("eventTimezone", "UTC");
         values.put(CalendarContract.Events.ALL_DAY, op.optBoolean("allDay") ? 1 : 0);
-        values.put(CalendarContract.Events.SYNC_DATA1, SYNC_MARKER);
+        // SYNC_DATA1 is sync-adapter-only (IllegalArgumentException otherwise);
+        // ownership is tracked in the app's SQLite mapping table instead.
         return values;
     }
 
