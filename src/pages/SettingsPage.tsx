@@ -30,6 +30,7 @@ import {
   GOOGLE_CLIENT_ID_KEY,
   loadGoogleConnection,
 } from '../integrations/google/sync';
+import { EMBEDDED_CLIENT_ID } from '../integrations/google/embedded-client-id';
 import { useGoogleSync } from '../integrations/google/use-sync';
 import {
   BACKGROUND_SYNC_KEY,
@@ -107,7 +108,7 @@ export function SettingsPage() {
       loadGoogleConnection(db.repos),
       db.repos.syncState.get('google'),
     ]);
-    setGoogleClientId(storedClientId ?? '');
+    setGoogleClientId(storedClientId ?? EMBEDDED_CLIENT_ID);
     setGoogleConnected(connection !== null);
     setGoogleSyncState(state);
   }, [db]);

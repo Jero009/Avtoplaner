@@ -21,6 +21,7 @@ import {
   saveGoogleConnection,
   syncGoogleCalendar,
 } from './sync';
+import { EMBEDDED_CLIENT_ID } from './embedded-client-id';
 
 export type GoogleFeedback = { kind: 'info' | 'error'; text: string } | null;
 
@@ -75,7 +76,9 @@ export function useGoogleSync() {
   const connect = useCallback(
     async (clientIdInput: string): Promise<boolean> => {
       const db = dbState.status === 'ready' ? dbState.database : null;
-      const clientId = clientIdInput.trim();
+      // Field left empty → fall back to the client ID bundled with the app,
+      // so the released build connects out of the box for everyone.
+      const clientId = clientIdInput.trim() || EMBEDDED_CLIENT_ID;
       if (!db) {
         return false;
       }

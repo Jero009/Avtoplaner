@@ -145,7 +145,7 @@
     "title": "Google Calendar",
     "description": "Pulls events from your Google Calendar into the app. Data is stored on this device only.",
     "clientId": "Google OAuth client ID",
-    "clientIdHint": "Create a free OAuth client at console.cloud.google.com \u2014 see docs/google-oauth-setup.md in the repo for the exact steps.",
+    "clientIdHint": "Already built into the released app \u2014 just press Connect. Enter your own client ID only to override it (docs/google-oauth-setup.md).",
     "connect": "Connect Google account",
     "connecting": "Waiting for Google \u2026",
     "connectSuccess": "Google account connected and synced.",

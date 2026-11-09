@@ -29,8 +29,9 @@ implemented.
 - Token storage: refresh token in the local SQLite settings table, excluded
   from backups.
 
-**Decision:** No backend, no embedded secret — pure client-side PKCE. The
-client ID is runtime-configurable in Settings so the released APK can be
-connected without a rebuild. Implemented in `src/integrations/google/`
+**Decision:** No backend, no embedded secret — pure client-side PKCE. ONE
+maintainer-registered client ships inside the app
+(`embedded-client-id.ts`) so end users connect with zero setup; the Settings
+field stays as a per-user override. Implemented in `src/integrations/google/`
 (v1.4.0).
 

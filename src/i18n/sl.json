@@ -145,7 +145,7 @@
     "title": "Google Koledar",
     "description": "Prenese dogodke iz tvojega Google Koledarja v aplikacijo. Podatki ostanejo samo na tej napravi.",
     "clientId": "Google OAuth client ID",
-    "clientIdHint": "Brezplačen OAuth client ustvariš na console.cloud.google.com — natančni koraki so v docs/google-oauth-setup.md v repozitoriju.",
+    "clientIdHint": "Že vgrajeno v objavljeno aplikacijo — samo pritisni Poveži. Vpiši svoj client ID le, če želiš preglasiti (docs/google-oauth-setup.md).",
     "connect": "Poveži Google račun",
     "connecting": "Čakam na Google …",
     "connectSuccess": "Google račun povezan in usklajen.",
