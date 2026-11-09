@@ -7,4 +7,5 @@
  * Empty until the maintainer creates it — see docs/google-oauth-setup.md.
  * Users can still enter their own client ID in Settings (override).
  */
-export const EMBEDDED_CLIENT_ID = '';
+export const EMBEDDED_CLIENT_ID =
+  '30079128182-d7r0tnmm083hhr2u02jbv0ik9tr9bjau.apps.googleusercontent.com';
