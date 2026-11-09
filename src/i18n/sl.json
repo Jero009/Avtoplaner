@@ -141,6 +141,34 @@
     "backgroundSync": "Sinhroniziraj v ozadju",
     "backgroundSyncHint": "Dnevno samodejno posodabljanje prek Androida (WorkManager), tudi ko aplikacija ni odprta. Napake se pokažejo ob naslednjem zagonu."
   },
+  "google": {
+    "title": "Google Koledar",
+    "description": "Prenese dogodke iz tvojega Google Koledarja v aplikacijo. Podatki ostanejo samo na tej napravi.",
+    "clientId": "Google OAuth client ID",
+    "clientIdHint": "Brezplačen OAuth client ustvariš na console.cloud.google.com — natančni koraki so v docs/google-oauth-setup.md v repozitoriju.",
+    "connect": "Poveži Google račun",
+    "connecting": "Čakam na Google …",
+    "connectSuccess": "Google račun povezan in usklajen.",
+    "connectCancelled": "Povezovanje preklicano ali poteklo — poskusi znova.",
+    "disconnect": "Odklopi",
+    "disconnectConfirmTitle": "Odklopiti Google Koledar?",
+    "disconnectConfirmMessage": "Shranjena povezava in vsi usklajeni Google dogodki bodo odstranjeni iz te naprave. Tvoj Google račun ostane nespremenjen.",
+    "disconnected": "Google račun odklopen.",
+    "syncNow": "Uskladi zdaj",
+    "syncing": "Usklajujem …",
+    "lastSync": "Nazadnje usklajeno: {{time}}",
+    "never": "nikoli",
+    "syncSummary": "Usklajeno: {{events}} dogodkov iz {{calendars}} koledarjev.",
+    "errors": {
+      "missingClientId": "Najprej vpiši Google client ID.",
+      "missingCredentials": "Google račun ni povezan — najprej pritisni Poveži.",
+      "auth": "Google je zavril povezavo. Odklopi in poveži znova.",
+      "network": "Povezava ni uspela. Preveri internet.",
+      "http": "Google Calendar API je vrnil napako.",
+      "parse": "Google je vrnil nepričakovan odgovor.",
+      "unknown": "Pri usklajevanju Google Koledarja je šlo kaj narobe."
+    }
+  },
   "settings": {
     "title": "Nastavitve",
     "appearance": "Videz",

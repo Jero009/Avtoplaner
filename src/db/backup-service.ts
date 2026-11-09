@@ -1,5 +1,12 @@
 import type { DbDriver, SqlValue } from './driver';
 import { REDACTED_SETTING_KEYS } from '../integrations/easistent/sync';
+import { GOOGLE_REDACTED_SETTING_KEYS } from '../integrations/google/sync';
+
+/** Settings keys whose values never leave the device via backups. */
+export const ALL_REDACTED_SETTING_KEYS: readonly string[] = [
+  ...REDACTED_SETTING_KEYS,
+  ...GOOGLE_REDACTED_SETTING_KEYS,
+];
 
 /**
  * Tables included in a backup, with their column order. Insert/delete order
@@ -49,7 +56,7 @@ export async function exportAllTables(
     );
     data[table] =
       table === 'settings'
-        ? rows.filter((row) => !REDACTED_SETTING_KEYS.includes(String(row.key)))
+        ? rows.filter((row) => !ALL_REDACTED_SETTING_KEYS.includes(String(row.key)))
         : rows;
   }
   return data;

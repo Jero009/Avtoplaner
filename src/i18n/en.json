@@ -12,7 +12,7 @@
     "menu": "Menu"
   },
   "common": {
-    "loading": "Loading …",
+    "loading": "Loading \u2026",
     "error": "Something went wrong.",
     "retry": "Try again",
     "cancel": "Cancel",
@@ -62,7 +62,7 @@
       "endAfterStart": "End must be after start."
     },
     "deleteConfirmTitle": "Delete event?",
-    "deleteConfirmMessage": "The event “{{title}}” will be permanently deleted.",
+    "deleteConfirmMessage": "The event \u201c{{title}}\u201d will be permanently deleted.",
     "conflictWarning": "This event overlaps another event. Decide what you want to do.",
     "conflictsWith": "Conflicts with: {{titles}}",
     "sources": "Calendars",
@@ -91,9 +91,9 @@
     "description": "Where two groups' lessons overlap, pick once which hour is yours. The choice applies to every week; unselected lessons are not synced and not shown.",
     "empty": "No overlapping lessons.",
     "showAll": "Show all",
-    "hint": "Some lessons still overlap — pick yours.",
+    "hint": "Some lessons still overlap \u2014 pick yours.",
     "roomPrefix": "room",
-    "slotLabel": "{{weekday}} {{from}}–{{to}}"
+    "slotLabel": "{{weekday}} {{from}}\u2013{{to}}"
   },
   "grades": {
     "title": "Grades",
@@ -123,23 +123,51 @@
     "saveCredentials": "Save login",
     "credentialsSaved": "Login saved.",
     "testConnection": "Test connection",
-    "testing": "Testing …",
+    "testing": "Testing \u2026",
     "connectionOk": "Login successful.",
     "syncNow": "Sync now",
-    "syncing": "Syncing …",
+    "syncing": "Syncing \u2026",
     "lastSync": "Last synced: {{time}}",
     "never": "never",
     "syncSummary": "Synced: {{lessons}} lessons, {{homework}} homework, {{tests}} tests.",
     "errors": {
       "missingCredentials": "Enter and save your eAsistent login first.",
       "auth": "Invalid username or password.",
-      "network": "Connection failed. In a browser/PWA the eAsistent API is blocked by CORS — sync in the Android app.",
+      "network": "Connection failed. In a browser/PWA the eAsistent API is blocked by CORS \u2014 sync in the Android app.",
       "http": "eAsistent responded with an error.",
       "parse": "eAsistent returned an unexpected response.",
       "unknown": "Sync failed."
     },
     "backgroundSync": "Sync in the background",
     "backgroundSyncHint": "Daily automatic updates via Android (WorkManager), even when the app is closed. Failures surface on the next app open."
+  },
+  "google": {
+    "title": "Google Calendar",
+    "description": "Pulls events from your Google Calendar into the app. Data is stored on this device only.",
+    "clientId": "Google OAuth client ID",
+    "clientIdHint": "Create a free OAuth client at console.cloud.google.com \u2014 see docs/google-oauth-setup.md in the repo for the exact steps.",
+    "connect": "Connect Google account",
+    "connecting": "Waiting for Google \u2026",
+    "connectSuccess": "Google account connected and synced.",
+    "connectCancelled": "Connection cancelled or timed out \u2014 try again.",
+    "disconnect": "Disconnect",
+    "disconnectConfirmTitle": "Disconnect Google Calendar?",
+    "disconnectConfirmMessage": "The stored connection and all synced Google events are removed from this device. Your Google account is not touched.",
+    "disconnected": "Google account disconnected.",
+    "syncNow": "Sync now",
+    "syncing": "Syncing \u2026",
+    "lastSync": "Last synced: {{time}}",
+    "never": "never",
+    "syncSummary": "Synced {{events}} events from {{calendars}} calendars.",
+    "errors": {
+      "missingClientId": "Enter your Google client ID first.",
+      "missingCredentials": "Google account is not connected \u2014 press Connect first.",
+      "auth": "Google rejected the connection. Disconnect, then connect again.",
+      "network": "Connection failed. Check your internet.",
+      "http": "Google Calendar API returned an error.",
+      "parse": "Google returned an unexpected response.",
+      "unknown": "Something went wrong while syncing Google Calendar."
+    }
   },
   "settings": {
     "title": "Settings",
@@ -149,12 +177,12 @@
     "themeDark": "Dark",
     "themeSystem": "System",
     "language": "Language",
-    "languageSl": "Slovenščina",
+    "languageSl": "Sloven\u0161\u010dina",
     "languageEn": "English",
     "calendarsSection": "Calendars",
     "calendarVisibility": "Calendar visibility",
     "backupSection": "Backup",
-    "backupDescription": "Export all data to a single JSON file. Importing replaces all data in the app. The eAsistent password is never included — re-enter it after importing.",
+    "backupDescription": "Export all data to a single JSON file. Importing replaces all data in the app. The eAsistent password is never included \u2014 re-enter it after importing.",
     "export": "Export backup",
     "import": "Import backup",
     "importFileSelected": "Selected file: {{name}}",
@@ -171,16 +199,16 @@
       "missingExportedAt": "The export date is missing in the file.",
       "invalidExportedAt": "The export date is invalid.",
       "missingData": "The data section is missing in the file.",
-      "invalidTable": "Table “{{table}}” in the file is invalid.",
+      "invalidTable": "Table \u201c{{table}}\u201d in the file is invalid.",
       "importFailed": "Import failed."
     }
   },
   "deviceCalendar": {
     "title": "Calendar",
-    "description": "Writes eAsistent data (lessons, tests, homework) into a calendar on this device — works with Fossify/DAVx⁵ and any Android calendar, no Google account.",
+    "description": "Writes eAsistent data (lessons, tests, homework) into a calendar on this device \u2014 works with Fossify/DAVx\u2075 and any Android calendar, no Google account.",
     "webOnly": "Writing to the device calendar is only available in the Android app.",
     "target": "Target calendar",
-    "pick": "— pick one —",
+    "pick": "\u2014 pick one \u2014",
     "pickFirst": "Pick a target calendar first.",
     "noCalendars": "No writable calendar exists on this device.",
     "create": "Create Avtoplaner calendar",
@@ -188,13 +216,13 @@
     "refresh": "Refresh list",
     "write": "Write to calendar",
     "sync": "Sync calendar",
-    "syncing": "Syncing …",
+    "syncing": "Syncing \u2026",
     "removeAll": "Remove from calendar",
     "removeConfirmTitle": "Remove entries from the calendar?",
     "removeConfirmMessage": "Every entry written by Avtoplaner will be removed from the device's calendars.",
     "removed": "Removed entries: {{count}}.",
     "lastWrite": "Last written: {{time}}",
-    "permissionDenied": "Calendar access denied. Enable it in Settings → Apps → Avtoplaner → Permissions → Calendar.",
+    "permissionDenied": "Calendar access denied. Enable it in Settings \u2192 Apps \u2192 Avtoplaner \u2192 Permissions \u2192 Calendar.",
     "summary": "Written: {{created}} new, {{updated}} updated, {{deleted}} removed (in calendar: {{total}}).",
     "syncFailed": "Writing to the calendar failed.",
     "homeworkLabel": "homework",
@@ -202,6 +230,6 @@
   },
   "db": {
     "initError": "The database could not be opened.",
-    "loadingDb": "Preparing the database …"
+    "loadingDb": "Preparing the database \u2026"
   }
 }

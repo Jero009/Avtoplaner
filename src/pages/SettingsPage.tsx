@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Capacitor } from '@capacitor/core';
-import { Download, KeyRound, Link2, RefreshCw, Upload } from 'lucide-react';
+import { Download, KeyRound, Link2, LogOut, RefreshCw, Upload } from 'lucide-react';
 import { useDb } from '../app/db-context';
 import { useTheme } from '../app/theme-context';
 import type { Theme, Language } from '../utils/preferences';
@@ -26,6 +26,11 @@ import {
   EASISTENT_USERNAME_KEY,
 } from '../integrations/easistent/sync';
 import { useEasistentSync } from '../integrations/easistent/use-sync';
+import {
+  GOOGLE_CLIENT_ID_KEY,
+  loadGoogleConnection,
+} from '../integrations/google/sync';
+import { useGoogleSync } from '../integrations/google/use-sync';
 import {
   BACKGROUND_SYNC_KEY,
   backgroundSyncEnabled,
@@ -63,6 +68,13 @@ export function SettingsPage() {
   const { syncing, testing, feedback, sync, testConnection } = useEasistentSync();
   const isAndroid = Capacitor.getPlatform() === 'android';
 
+  // Google connection + sync state
+  const [googleClientId, setGoogleClientId] = useState('');
+  const [googleConnected, setGoogleConnected] = useState(false);
+  const [googleSyncState, setGoogleSyncState] = useState<SyncStateRecord | null>(null);
+  const [disconnectConfirm, setDisconnectConfirm] = useState(false);
+  const google = useGoogleSync();
+
   const loadCalendars = useCallback(async () => {
     if (!db) {
       return;
@@ -86,10 +98,25 @@ export function SettingsPage() {
     setBackgroundSync(backgroundSyncEnabled(backgroundRaw, Boolean(storedPassword)));
   }, [db]);
 
+  const loadGoogleState = useCallback(async () => {
+    if (!db) {
+      return;
+    }
+    const [storedClientId, connection, state] = await Promise.all([
+      db.repos.settings.get(GOOGLE_CLIENT_ID_KEY),
+      loadGoogleConnection(db.repos),
+      db.repos.syncState.get('google'),
+    ]);
+    setGoogleClientId(storedClientId ?? '');
+    setGoogleConnected(connection !== null);
+    setGoogleSyncState(state);
+  }, [db]);
+
   useEffect(() => {
     void loadCalendars();
     void loadEasistentState();
-  }, [loadCalendars, loadEasistentState]);
+    void loadGoogleState();
+  }, [loadCalendars, loadEasistentState, loadGoogleState]);
 
   const saveCredentials = async () => {
     if (!db || username.trim().length === 0) {
@@ -123,6 +150,29 @@ export function SettingsPage() {
     setBackgroundSync(next);
     await db.repos.settings.set(BACKGROUND_SYNC_KEY, next ? '1' : '0');
     await setBackgroundSyncSchedule(next);
+  };
+
+  const runConnect = async () => {
+    const ok = await google.connect(googleClientId);
+    if (ok) {
+      await loadGoogleState();
+      await loadCalendars();
+    }
+  };
+
+  const runGoogleSync = async () => {
+    const ok = await google.sync();
+    if (ok) {
+      await loadGoogleState();
+      await loadCalendars();
+    }
+  };
+
+  const confirmGoogleDisconnect = async () => {
+    await google.disconnect();
+    setDisconnectConfirm(false);
+    await loadGoogleState();
+    await loadCalendars();
   };
 
   const setLanguage = (language: Language) => {
@@ -392,6 +442,96 @@ export function SettingsPage() {
         )}
       </section>
 
+      <section className="card" aria-labelledby="google-heading">
+        <h2 id="google-heading" className="section-title mb-1">
+          {t('google.title')}
+        </h2>
+        <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+          {t('google.description')}
+        </p>
+        {dbState.status === 'error' ? (
+          <DbInitError />
+        ) : (
+          <div className="flex flex-col gap-3">
+            <div>
+              <label className="label" htmlFor="google-client-id">
+                {t('google.clientId')}
+              </label>
+              <input
+                id="google-client-id"
+                type="text"
+                className="input"
+                value={googleClientId}
+                placeholder="xxxxxxxx.apps.googleusercontent.com"
+                autoComplete="off"
+                spellCheck={false}
+                onChange={(event) => setGoogleClientId(event.target.value)}
+              />
+              <p className="mt-1 text-xs text-slate-400">
+                {t('google.clientIdHint')}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {!googleConnected && (
+                <button
+                  type="button"
+                  className="btn btn-primary"
+                  onClick={() => void runConnect()}
+                  disabled={!db || google.connecting || google.syncing}
+                >
+                  <Link2 className="size-5" aria-hidden="true" />
+                  {google.connecting ? t('google.connecting') : t('google.connect')}
+                </button>
+              )}
+              {googleConnected && (
+                <>
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => void runGoogleSync()}
+                    disabled={!db || google.syncing || google.connecting}
+                  >
+                    <RefreshCw
+                      className={`size-5 ${google.syncing ? 'animate-spin' : ''}`}
+                      aria-hidden="true"
+                    />
+                    {google.syncing ? t('google.syncing') : t('google.syncNow')}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setDisconnectConfirm(true)}
+                    disabled={!db || google.connecting || google.syncing}
+                  >
+                    <LogOut className="size-5" aria-hidden="true" />
+                    {t('google.disconnect')}
+                  </button>
+                </>
+              )}
+            </div>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              {t('google.lastSync', {
+                time: googleSyncState?.lastSuccessUtc
+                  ? formatUtcInZone(googleSyncState.lastSuccessUtc, 'd.M.yyyy HH:mm')
+                  : t('google.never'),
+              })}
+            </p>
+            {google.feedback && (
+              <p
+                role="status"
+                className={`text-sm ${
+                  google.feedback.kind === 'error'
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-green-700 dark:text-green-400'
+                }`}
+              >
+                {google.feedback.text}
+              </p>
+            )}
+          </div>
+        )}
+      </section>
+
       <DeviceCalendarSection />
 
       <section className="card" aria-labelledby="backup-heading">
@@ -459,6 +599,17 @@ export function SettingsPage() {
             }
           }}
           onConfirm={() => void confirmImport()}
+        />
+      )}
+
+      {disconnectConfirm && (
+        <ConfirmDialog
+          title={t('google.disconnectConfirmTitle')}
+          message={t('google.disconnectConfirmMessage')}
+          confirmLabel={t('google.disconnect')}
+          danger
+          onCancel={() => setDisconnectConfirm(false)}
+          onConfirm={() => void confirmGoogleDisconnect()}
         />
       )}
     </div>

@@ -61,7 +61,7 @@ All data is stored locally in SQLite. There is no backend, no login and no user 
 |---|---|---|
 | Local calendar & events | ✅ | ✅ |
 | Dashboard, themes, languages | ✅ | ✅ |
-| Google Calendar | ✅ | ✅ |
+| Google Calendar | ✅ | ✅ (needs the deployed origin as a registered redirect — pending PWA deploy) |
 | eAsistent | ✅ | ❌ API blocked by CORS in the browser — clear error shown, cached data stays visible |
 | Notifications when app is closed | ✅ (scheduled local notifications) | ❌ In-app only |
 | Backup / restore | ✅ | ✅ |

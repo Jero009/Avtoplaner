@@ -28,6 +28,10 @@ const LOCAL_CALENDAR_COLOR = '#2563eb';
 export const EASISTENT_CALENDAR_ID = 'easistent';
 export const EASISTENT_CALENDAR_COLOR = '#059669';
 
+/** The calendar all Google-sourced events land in. */
+export const GOOGLE_CALENDAR_ID = 'google';
+export const GOOGLE_CALENDAR_COLOR = '#9333ea';
+
 export function createCalendarRepository(db: DbDriver) {
   return {
     async list(): Promise<CalendarRecord[]> {
@@ -73,6 +77,19 @@ export function createCalendarRepository(db: DbDriver) {
         `INSERT OR IGNORE INTO calendars (id, source, external_id, name, color, visible)
          VALUES (?, 'easistent', 'easistent', 'eAsistent', ?, 1)`,
         [EASISTENT_CALENDAR_ID, EASISTENT_CALENDAR_COLOR],
+      );
+    },
+
+    /**
+     * Make sure the Google Calendar bucket exists (created on first sync).
+     * All Google-sourced events land in this single bucket; INSERT OR IGNORE
+     * keeps the user's visibility choice across syncs.
+     */
+    async ensureGoogleCalendar(): Promise<void> {
+      await db.run(
+        `INSERT OR IGNORE INTO calendars (id, source, external_id, name, color, visible)
+         VALUES (?, 'google', 'google', 'Google', ?, 1)`,
+        [GOOGLE_CALENDAR_ID, GOOGLE_CALENDAR_COLOR],
       );
     },
   };

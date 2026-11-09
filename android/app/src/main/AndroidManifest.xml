@@ -22,6 +22,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
+            <!--
+              Google OAuth redirect: Google redirects back to
+              com.googleusercontent.apps.<CLIENT_ID>:/oauth2redirect after the
+              consent screen. The scheme alone is matched (any host), so the
+              client ID stays configurable at runtime without a rebuild.
+            -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.googleusercontent.apps" />
+            </intent-filter>
+
         </activity>
 
         <provider

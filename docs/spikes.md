@@ -16,9 +16,21 @@ implemented.
 
 ## Google Calendar
 
-- Android authentication: Pending
-- Browser authentication: Pending
-- Calendar/event fetch: Pending
+- Android authentication: **Verified by design** — OAuth 2.0 Authorization
+  Code + PKCE via the system browser (Custom Tabs), redirect through the
+  reverse-client-ID custom scheme `com.googleusercontent.apps.<id>:`
+  (auto-registered by Google for Android clients). Requires a free
+  Android-type OAuth client (see [`google-oauth-setup.md`](google-oauth-setup.md)).
+- Browser authentication: Supported by the same PKCE flow — requires the
+  deployed origin registered as a Web-application redirect (pending PWA
+  deploy).
+- Calendar/event fetch: `calendarList.list` + `events.list` with
+  `singleEvents=true` (recurrences expanded), full-replace sync into SQLite.
+- Token storage: refresh token in the local SQLite settings table, excluded
+  from backups.
 
-**Decision:** Pending.
+**Decision:** No backend, no embedded secret — pure client-side PKCE. The
+client ID is runtime-configurable in Settings so the released APK can be
+connected without a rebuild. Implemented in `src/integrations/google/`
+(v1.4.0).
 
