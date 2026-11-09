@@ -16,7 +16,8 @@ and a PWA build. Data is stored locally; there is no Autoplaner backend.
   database (lessons, substitutions/cancellations, homework, announced
   tests), shown in the calendar, timetable and homework pages. Android only
   for syncing — the browser/PWA is blocked by CORS and shows a clear error.
-  Grades, Google Calendar and notifications are not enabled yet.
+  Grades, Google Calendar and closed-app notifications are tracked in the
+  Status list below.
 - **Device calendar + background sync (v1.3):** synced eAsistent data can
   be written into an Android device calendar (CalendarProvider — works with
   Fossify/DAVx⁵, no Google API) via a purpose-built Capacitor plugin
@@ -29,6 +30,15 @@ and a PWA build. Data is stored locally; there is no Autoplaner backend.
   the last sync is >6 h old and daily in the background
   (@transistorsoft/capacitor-background-fetch / WorkManager, network-only,
   silent failures). Web/PWA shows an explanatory note instead.
+- **Google Calendar connection (v1.4):** OAuth 2.0 with PKCE and no
+  backend; an app-wide OAuth client ID is embedded so any user can connect
+  without setting up Google Cloud (overridable per user in Settings).
+  Syncs all of the user's Google calendars into a single "Google" bucket
+  shown alongside local and eAsistent events. Android only — the browser
+  PWA has no deep-link redirect. The refresh token is excluded from
+  backup export/import.
+
+Grades and closed-app notifications are not implemented yet.
 
 Pre-development prerequisites and their status are tracked in
 [`docs/pre-development.md`](docs/pre-development.md).
@@ -77,3 +87,34 @@ Access to eAsistent must comply with its terms and applicable law.
 See [`requirements.md`](requirements.md) for the full product requirements and
 roadmap. Database migrations are in `src/db/migrations/` and are applied in
 numeric order. Timestamps are stored as UTC ISO-8601 strings.
+
+### Documentation map
+
+- [`requirements.md`](requirements.md) — product requirements and roadmap
+  (source of truth for behavior and scope).
+- [`agent.md`](agent.md) — working guide for coding agents.
+- [`docs/google-oauth-setup.md`](docs/google-oauth-setup.md) — Google Cloud /
+  OAuth client configuration used by the embedded client ID.
+- [`docs/privacy.md`](docs/privacy.md) — privacy policy (OAuth consent screen).
+- [`docs/pre-development.md`](docs/pre-development.md) — pre-development
+  prerequisites and their status.
+- [`docs/spikes.md`](docs/spikes.md) — research notes.
+- [`docs/release.md`](docs/release.md) — how to build and publish a release.
+- [`docs/troubleshooting.md`](docs/troubleshooting.md) — known device issues
+  and how to diagnose them.
+
+### Build and test
+
+```sh
+npm install
+node scripts/copy-sqlite-wasm.mjs   # required before running the web app
+npm run dev                         # web dev server
+npm run build                       # production web bundle into dist/
+npm run lint
+npx vitest run                      # unit tests
+npx cap sync android                # MUST run after every npm run build
+cd android && ./gradlew assembleDebug
+```
+
+Releases are documented in
+[`docs/release.md`](docs/release.md).
