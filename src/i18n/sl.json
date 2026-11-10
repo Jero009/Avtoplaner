@@ -27,7 +27,8 @@
     "offline": "Brez povezave",
     "version": "Različica {{version}}",
     "toggleNavigation": "Preklopi navigacijo",
-    "toggleTheme": "Preklopi temo"
+    "toggleTheme": "Preklopi temo",
+    "appUpdated": "Aplikacija se je posodobila — poskusi znova."
   },
   "dashboard": {
     "title": "Nadzorna plošča",

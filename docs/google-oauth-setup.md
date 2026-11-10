@@ -41,9 +41,11 @@ client for the whole app — this file documents that one-time registration.
 ## Why no redirect URI setup is needed (Android)
 
 Google auto-registers the reverse-client-ID custom scheme
-`com.googleusercontent.apps.<CLIENT_ID>:/oauth2redirect` for Android OAuth
-clients. The app's manifest already matches that scheme, so the client ID
-stays runtime-configurable — no rebuild after creating it.
+`com.googleusercontent.apps.<CLIENT_ID_WITHOUT_SUFFIX>:/oauth2redirect` for
+Android OAuth clients — the ID is embedded WITHOUT its
+`.apps.googleusercontent.com` part. The app builds this in
+`redirectUriFor()` (sending the full ID yields `redirect_uri_mismatch`), so
+the client ID stays runtime-configurable — no rebuild after creating it.
 
 ## Browser / PWA
 

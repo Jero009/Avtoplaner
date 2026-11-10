@@ -126,13 +126,16 @@ export function parseRedirectUrl(url: string): RedirectResult | null {
 /**
  * The redirect URI for a client ID. Google auto-registers the reverse-client
  * ID custom scheme for installed-app clients, so the same client works on
- * Android without any redirect configuration on Google's side.
+ * Android without any redirect configuration on Google's side. The scheme
+ * embeds the client ID WITHOUT its .apps.googleusercontent.com suffix
+ * (Google rejects the full form with redirect_uri_mismatch).
  */
 export function redirectUriFor(clientId: string, origin?: string): string {
   if (origin) {
     return `${origin}/oauth2redirect`;
   }
-  return `com.googleusercontent.apps.${clientId}:/oauth2redirect`;
+  const bareId = clientId.replace(/\.apps\.googleusercontent\.com$/, '');
+  return `com.googleusercontent.apps.${bareId}:/oauth2redirect`;
 }
 
 export interface ExchangeOptions {

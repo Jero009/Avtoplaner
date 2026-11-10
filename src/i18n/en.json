@@ -27,7 +27,8 @@
     "offline": "Offline",
     "version": "Version {{version}}",
     "toggleNavigation": "Toggle navigation",
-    "toggleTheme": "Toggle theme"
+    "toggleTheme": "Toggle theme",
+    "appUpdated": "The app was updated \u2014 please try again."
   },
   "dashboard": {
     "title": "Dashboard",

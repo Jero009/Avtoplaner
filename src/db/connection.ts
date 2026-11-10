@@ -1,4 +1,5 @@
 import { Capacitor } from '@capacitor/core';
+import { safeDynamicImport } from '../utils/safe-dynamic-import';
 import {
   CapacitorSQLite,
   SQLiteConnection,
@@ -71,7 +72,7 @@ class SqliteDriver implements DbDriver {
 }
 
 async function initializeWebStore(sqlite: SQLiteConnection): Promise<void> {
-  const { defineCustomElements } = await import('jeep-sqlite/loader');
+  const { defineCustomElements } = await safeDynamicImport(() => import('jeep-sqlite/loader'));
   defineCustomElements(window);
   if (document.querySelector('jeep-sqlite') === null) {
     const element = document.createElement(

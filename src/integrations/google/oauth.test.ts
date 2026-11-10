@@ -91,9 +91,15 @@ describe('parseRedirectUrl', () => {
 });
 
 describe('redirectUriFor', () => {
-  it('uses the reverse-client-id scheme on Android', () => {
+  it('strips the .apps.googleusercontent.com suffix in the reverse-client-id scheme', () => {
     expect(redirectUriFor('client-123.apps.googleusercontent.com')).toBe(
-      'com.googleusercontent.apps.client-123.apps.googleusercontent.com:/oauth2redirect',
+      'com.googleusercontent.apps.client-123:/oauth2redirect',
+    );
+  });
+
+  it('passes bare client IDs through unchanged', () => {
+    expect(redirectUriFor('client-123')).toBe(
+      'com.googleusercontent.apps.client-123:/oauth2redirect',
     );
   });
 

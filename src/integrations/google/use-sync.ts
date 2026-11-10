@@ -22,6 +22,7 @@ import {
   syncGoogleCalendar,
 } from './sync';
 import { EMBEDDED_CLIENT_ID } from './embedded-client-id';
+import { safeDynamicImport, StaleChunkError } from '../../utils/safe-dynamic-import';
 
 export type GoogleFeedback = { kind: 'info' | 'error'; text: string } | null;
 
@@ -41,6 +42,11 @@ export function useGoogleSync() {
 
   const errorMessage = useCallback(
     (error: unknown): string => {
+      // Stale chunk after an app update — a one-time reload is already
+      // scheduled; tell the user to just tap again.
+      if (error instanceof StaleChunkError) {
+        return t('common.appUpdated');
+      }
       if (error instanceof MissingGoogleClientIdError) {
         return t('google.errors.missingClientId');
       }
@@ -112,7 +118,7 @@ export function useGoogleSync() {
         // Hand off to the browser: on Android the deep link comes back to
         // us via appUrlOpen, on web Google redirects to <origin>/oauth2redirect.
         if (Capacitor.isNativePlatform()) {
-          const { Browser } = await import('@capacitor/browser');
+          const { Browser } = await safeDynamicImport(() => import('@capacitor/browser'));
           await Browser.open({ url });
         } else {
           window.location.assign(url);

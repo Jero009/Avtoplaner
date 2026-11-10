@@ -1,6 +1,7 @@
 import { Capacitor } from '@capacitor/core';
 import type { DbDriver } from '../../db/driver';
 import type { Repositories } from '../../db/repositories';
+import { safeDynamicImport } from '../../utils/safe-dynamic-import';
 import { openDatabase } from '../../db/connection';
 import { runMigrations } from '../../db/migration-runner';
 import { createRepositories } from '../../db/repositories';
@@ -154,8 +155,8 @@ export function initBackgroundSync(): Promise<void> {
   }
   backgroundFetchReady ??= (async () => {
     try {
-      const { BackgroundFetch } = await import(
-        '@transistorsoft/capacitor-background-fetch'
+      const { BackgroundFetch } = await safeDynamicImport(
+        () => import('@transistorsoft/capacitor-background-fetch'),
       );
       await BackgroundFetch.configure(
         {
@@ -190,8 +191,8 @@ export async function setBackgroundSyncSchedule(enabled: boolean): Promise<void>
     return;
   }
   try {
-    const { BackgroundFetch } = await import(
-      '@transistorsoft/capacitor-background-fetch'
+    const { BackgroundFetch } = await safeDynamicImport(
+      () => import('@transistorsoft/capacitor-background-fetch'),
     );
     if (enabled) {
       await BackgroundFetch.start();
