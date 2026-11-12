@@ -25,14 +25,18 @@
             <!--
               Google OAuth redirect: Google redirects back to
               com.googleusercontent.apps.<CLIENT_ID>:/oauth2redirect after the
-              consent screen. The scheme alone is matched (any host), so the
-              client ID stays configurable at runtime without a rebuild.
+              consent screen. android:scheme matches EXACTLY (no prefix or
+              wildcard matching exists for schemes), so this MUST be the full
+              reverse-client-id scheme of the embedded client ID
+              (see src/integrations/google/embedded-client-id.ts).
+              A custom client ID entered in Settings cannot complete the
+              redirect on Android unless its scheme is also declared here.
             -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="com.googleusercontent.apps" />
+                <data android:scheme="com.googleusercontent.apps.30079128182-d7r0tnmm083hhr2u02jbv0ik9tr9bjau" />
             </intent-filter>
 
         </activity>
