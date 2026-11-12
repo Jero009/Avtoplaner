@@ -1,3 +1,5 @@
+**English** | [Slovenščina](README.sl.md)
+
 # Autoplaner
 
 Autoplaner is a personal calendar for Android and the web. It combines local
