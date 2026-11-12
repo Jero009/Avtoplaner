@@ -38,7 +38,9 @@ and a PWA build. Data is stored locally; there is no Autoplaner backend.
   Syncs all of the user's Google calendars into a single "Google" bucket
   shown alongside local and eAsistent events. Android only — the browser
   PWA has no deep-link redirect. The refresh token is excluded from
-  backup export/import.
+  backup export/import. Confirmed working end-to-end on Android as of
+  v1.4.6 (exact reverse-client-id scheme registered in the manifest +
+  native JSON response handling).
 
 Grades and closed-app notifications are not implemented yet.
 

@@ -40,7 +40,9 @@ gradnjo. Podatki so shranjeni lokalno; Avtoplaner nima svojega strežnika.
   uporabnika v Nastavitvah). Sinhronizira vse Google koledarje uporabnika v
   eno "Google" skupino, prikazano ob lokalnih in eAsistent dogodkih. Samo
   Android — brskalniški PWA nima deep-link preusmeritve. Žeton za osveževanje
-  je izključen iz izvoza/uvoza varnostnih kopij.
+  je izključen iz izvoza/uvoza varnostnih kopij. Od v1.4.6 preverjeno deluje
+  od začetka do konca na Androidu (v manifestu je registriran točen
+  reverse-client-id scheme + obravnava izvornih JSON odgovorov).
 
 Ocene in obvestila ob zaprti aplikaciji še niso implementirana.
 
