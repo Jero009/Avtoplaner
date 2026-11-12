@@ -2,7 +2,7 @@
 
 ## What the app does
 
-Autoplaner (also published as **Avtoplaner** on Google Play) is a personal calendar
+Autoplaner (**Avtoplaner**) is a personal calendar
 application for Android, with a complementary Progressive Web App (PWA) frontend.
 It combines three sources of events into a single offline-capable local database:
 
@@ -101,8 +101,7 @@ retrieval patterns.
     timetable fetch. The endpoint rejects ranges longer than 14 days (HTTP 400).
     Response includes `events` and `schedule` arrays. Results are chunked into
     ≤14-day windows transparently and deduped on overlap.
-  - All requests include `authorization: Bearer <token>` and `x-child-id: <id>`
-    headers.
+  - All requests include `authorization: Bearer <token>` and `x-child-id: <id>` headers.
 
 - **Token expiry:** The access token expires after ~24 hours, so every sync
   re-logs in. Credentials (username/password) are stored only in the platform
@@ -124,8 +123,7 @@ retrieval patterns.
   (defined in `src/integrations/google/embedded-client-id.ts`). This is a
   publicly readable ID — no client secret is embedded.
 - **How it works:** Any user can press **Connect** in Settings. The app initiates
-  PKCE flow through the system browser (Custom Tabs on Android, native Safari on
-  iOS). The redirect uses the reverse-client-ID custom scheme
+  PKCE flow through the system browser (Custom Tabs on Android). The redirect uses the reverse-client-ID custom scheme
   `com.googleusercontent.apps.<id>:/oauth2redirect`, which Google auto-registers
   for Android clients.
 - **Permissions:** Read-only scope `https://www.googleapis.com/auth/calendar`.
@@ -147,12 +145,12 @@ retrieval patterns.
 | Step | Command | What it does |
 |---|---|---|
 | **1. Install deps** | `npm ci` | Installs exact versions from `package-lock.json` |
-| **2. Copy SQLite WASM** | `node scripts/copy-sqlite-wasm.mjs` | Copes `sql-wasm.wasm` and `sql-wasm.worker.js` into `public/` |
+| **2. Copy SQLite WASM** | `node scripts/copy-sqlite-wasm.mjs` | Copies `sql-wasm.wasm` and `sql-wasm.worker.js` into `public/` |
 | **3. Build Vite** | `npm run build` | `tsc --noEmit` + `vite build` → `dist/` |
 | **4. Sync to Android** | `npx cap sync android` | Copies `dist/assets/` into `android/app/src/main/assets/public/`; **mandatory after every build** |
 | **5. Build native APK** | `cd android && ./gradlew assembleRelease` | Produces `app-release.apk` in `app/build/outputs/apk/release/` |
 | **6. Signing** | Keystore in `keystore/autoplaner.jks` | Passwords from `keystore/keystore.properties` (gitignored). Release builds sign if the properties file exists; debug builds use debug keystore. |
-| **7. Verify** | `./gradlew --no-daemon assembleHermesDebug assembleIrisDebug` + lint + unit tests | Full verification matrix (Hermes and Iris flavors) |
+| **7. Verify** | `npx vitest run` + lint | Typecheck runs inside `npm run build` (`tsc --noEmit`); there is no Android CI — release APKs are verified locally (`apksigner verify`, emulator logcat) |
 | **8. Publish** | `gh release create vX.Y.Z app-release.apk --title "vX.Y.Z" --notes "<changes>"` | New GitHub release with APK asset; versionCode incremented; `versionName` synchronized with `package.json` |
 
 **Version conventions:**
