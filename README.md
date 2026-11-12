@@ -62,7 +62,7 @@ The following alternatives were reviewed:
   MIT licensed, but exposes timetable scraping through a separate Python
   server and does not cover the required Android integration.
 
-The eAsistent integration will be implemented independently in
+The eAsistent integration is implemented independently in
 `src/integrations/easistent/`, using the project’s existing sync and SQLite
 boundaries. It must fail gracefully and retain cached data when the unofficial
 service changes or is unavailable.
@@ -93,6 +93,8 @@ numeric order. Timestamps are stored as UTC ISO-8601 strings.
 - [`requirements.md`](requirements.md) — product requirements and roadmap
   (source of truth for behavior and scope).
 - [`agent.md`](agent.md) — working guide for coding agents.
+- [`docs/PROJECT-OVERVIEW.md`](docs/PROJECT-OVERVIEW.md) — technical overview:
+  stack, integrations, and release pipeline.
 - [`docs/google-oauth-setup.md`](docs/google-oauth-setup.md) — Google Cloud /
   OAuth client configuration used by the embedded client ID.
 - [`docs/privacy.md`](docs/privacy.md) — privacy policy (OAuth consent screen).

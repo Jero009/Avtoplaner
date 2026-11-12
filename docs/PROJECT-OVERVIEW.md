@@ -53,8 +53,8 @@ no hosted database, no accounts, and no analytics. All data stays on the device.
 
 | Component | Technology |
 |---|---|
-| Language | Kotlin |
-| Build system | Gradle 8.13.0 |
+| Language | Java |
+| Build system | Gradle 8.14.3, AGP 8.13.0 |
 | SDK | compileSdk 36, minSdk 24, targetSdk 36 |
 | AndroidX | appcompat 1.7.1, coordinatorlayout 1.3.0, core-splashscreen, fragment 1.8.9 |
 | Google Services | `google-services` 4.4.4 plugin (optional, from `google-services.json`) |
@@ -95,13 +95,14 @@ retrieval patterns.
 
 - **Endpoints used:**
   - `POST https://www.easistent.com/m/login` — login with username/password;
-    returns JWT access token and user child ID. Request includes headers
+    returns an access token and the user id used as the child ID. Request includes headers
     `x-client-platform: web`, `x-client-version: 13`, `x-app-name: null`.
   - `GET https://www.easistent.com/m/timetable/events?from=YYYY-MM-DD&to=YYYY-MM-DD` —
     timetable fetch. The endpoint rejects ranges longer than 14 days (HTTP 400).
     Response includes `events` and `schedule` arrays. Results are chunked into
     ≤14-day windows transparently and deduped on overlap.
-  - All requests include `authorization: Bearer <token>` and `x-child-id: <id>` headers.
+  - All requests include an `Authorization: Bearer <token>` header and the
+    required `x-child-id: <id>` header (the API answers HTTP 403 without it).
 
 - **Token expiry:** The access token expires after ~24 hours, so every sync
   re-logs in. Credentials (username/password) are stored only in the platform
@@ -126,8 +127,9 @@ retrieval patterns.
   PKCE flow through the system browser (Custom Tabs on Android). The redirect uses the reverse-client-ID custom scheme
   `com.googleusercontent.apps.<id>:/oauth2redirect`, which Google auto-registers
   for Android clients.
-- **Permissions:** Read-only scope `https://www.googleapis.com/auth/calendar`.
-  Write support is not implemented.
+- **Permissions:** scope `https://www.googleapis.com/auth/calendar`. The client
+  only reads (`calendarList` + `events` endpoints); no write support is
+  implemented.
 - **Per-user override:** Users can enter their own Google Cloud client ID in
   Settings if they wish to use a custom project.
 - **Token storage:** The refresh token is stored locally in the app's SQLite
@@ -145,12 +147,12 @@ retrieval patterns.
 | Step | Command | What it does |
 |---|---|---|
 | **1. Install deps** | `npm ci` | Installs exact versions from `package-lock.json` |
-| **2. Copy SQLite WASM** | `node scripts/copy-sqlite-wasm.mjs` | Copies `sql-wasm.wasm` and `sql-wasm.worker.js` into `public/` |
+| **2. Copy SQLite WASM** | `node scripts/copy-sqlite-wasm.mjs` | Copies `sql-wasm.wasm` into `public/assets/` |
 | **3. Build Vite** | `npm run build` | `tsc --noEmit` + `vite build` → `dist/` |
 | **4. Sync to Android** | `npx cap sync android` | Copies `dist/assets/` into `android/app/src/main/assets/public/`; **mandatory after every build** |
 | **5. Build native APK** | `cd android && ./gradlew assembleRelease` | Produces `app-release.apk` in `app/build/outputs/apk/release/` |
 | **6. Signing** | Keystore in `keystore/autoplaner.jks` | Passwords from `keystore/keystore.properties` (gitignored). Release builds sign if the properties file exists; debug builds use debug keystore. |
-| **7. Verify** | `npx vitest run` + lint | Typecheck runs inside `npm run build` (`tsc --noEmit`); there is no Android CI — release APKs are verified locally (`apksigner verify`, emulator logcat) |
+| **7. Verify** | `npx vitest run` + lint | Typecheck runs inside `npm run build` (`tsc --noEmit`); there is no Android CI — release APKs are verified locally before publishing (see `docs/release.md`) |
 | **8. Publish** | `gh release create vX.Y.Z app-release.apk --title "vX.Y.Z" --notes "<changes>"` | New GitHub release with APK asset; versionCode incremented; `versionName` synchronized with `package.json` |
 
 **Version conventions:**
