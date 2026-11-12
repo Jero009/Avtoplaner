@@ -78,10 +78,15 @@ export const defaultGoogleRequest: GoogleRequestFn = async (
       // Keep the raw text so error bodies stay inspectable.
       responseType: 'text' as never,
     });
+    // CapacitorHttp may pre-parse JSON responses into an object despite
+    // responseType 'text' — String() of that object is "[object Object]",
+    // which then fails JSON.parse. Normalize both shapes to raw JSON text.
+    const data = response.data;
+    const raw = typeof data === 'string' ? data : JSON.stringify(data ?? '');
     if (response.status >= 400) {
-      throwHttpError(response.status, String(response.data ?? ''));
+      throwHttpError(response.status, raw);
     }
-    return parseJsonBody(String(response.data ?? ''), url);
+    return parseJsonBody(raw, url);
   }
 
   let response: Response;
