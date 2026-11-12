@@ -21,4 +21,6 @@ coverage/
 logs/
 *.log
 npm-debug.log*
+
+# Signing keys and secrets (never commit)
 keystore/
