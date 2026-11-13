@@ -58,6 +58,10 @@ brez pravih šolskih podatkov).
 | --- | --- | --- | --- |
 | ![Nadzorna plošča](docs/screenshots/dashboard.png) | ![Urnik](docs/screenshots/timetable.png) | ![Domače naloge](docs/screenshots/homework.png) | ![Koledar](docs/screenshots/calendar.png) |
 
+## Predstavitev
+
+Kratka predstavitev aplikacije v slovenščini: [`docs/PREDSTAVITEV.md`](docs/PREDSTAVITEV.md).
+
 ## Referenčna implementacija za eAsistent
 
 Izbrani referenčni repozitorij je
