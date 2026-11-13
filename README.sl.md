@@ -49,7 +49,16 @@ Ocene in obvestila ob zaprti aplikaciji še niso implementirana.
 Predpogoji pred razvojem in njihovo stanje so sledeni v
 [`docs/pre-development.md`](docs/pre-development.md).
 
-## Referenčni vir za implementacijo eAsistenta
+## Posnetki zaslona
+
+Vsi podatki na posnetkih zaslona so sintetični (ustvarjeni za predstavitve —
+brez pravih šolskih podatkov).
+
+| Nadzorna plošča | Urnik | Domače naloge | Koledar |
+| --- | --- | --- | --- |
+| ![Nadzorna plošča](docs/screenshots/dashboard.png) | ![Urnik](docs/screenshots/timetable.png) | ![Domače naloge](docs/screenshots/homework.png) | ![Koledar](docs/screenshots/calendar.png) |
+
+## Referenčna implementacija za eAsistent
 
 Izbrani referenčni repozitorij je
 [`chocoearly44/JEA`](https://github.com/chocoearly44/JEA).

@@ -47,6 +47,15 @@ Grades and closed-app notifications are not implemented yet.
 Pre-development prerequisites and their status are tracked in
 [`docs/pre-development.md`](docs/pre-development.md).
 
+## Screenshots
+
+All data in the screenshots is synthetic (generated for demos — no real
+school data).
+
+| Dashboard | Timetable | Homework | Calendar |
+| --- | --- | --- | --- |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Timetable](docs/screenshots/timetable.png) | ![Homework](docs/screenshots/homework.png) | ![Calendar](docs/screenshots/calendar.png) |
+
 ## eAsistent implementation reference
 
 The selected reference repository is
