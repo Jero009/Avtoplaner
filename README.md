@@ -56,6 +56,10 @@ school data).
 | --- | --- | --- | --- |
 | ![Dashboard](docs/screenshots/dashboard.png) | ![Timetable](docs/screenshots/timetable.png) | ![Homework](docs/screenshots/homework.png) | ![Calendar](docs/screenshots/calendar.png) |
 
+## Presentation
+
+A short app presentation in Slovenian: [`docs/PREDSTAVITEV.md`](docs/PREDSTAVITEV.md).
+
 ## eAsistent implementation reference
 
 The selected reference repository is
