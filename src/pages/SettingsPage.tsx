@@ -330,7 +330,7 @@ export function SettingsPage() {
         <h2 id="easistent-heading" className="section-title mb-1">
           {t('easistent.title')}
         </h2>
-        <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mb-3 text-sm text-nt-dim">
           {t('easistent.description')}
         </p>
         {dbState.status === 'error' ? (
@@ -365,7 +365,7 @@ export function SettingsPage() {
                   onChange={(event) => setPassword(event.target.value)}
                 />
                 {passwordSet && password.length === 0 && (
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-xs text-nt-dim">
                     {t('easistent.passwordKeep')}
                   </p>
                 )}
@@ -408,19 +408,19 @@ export function SettingsPage() {
                 <label className="flex items-center gap-2 text-sm">
                   <input
                     type="checkbox"
-                    className="size-4 accent-blue-600"
+                    className="size-4 accent-nt-primary-bg"
                     checked={backgroundSync}
                     disabled={!db || !passwordSet}
                     onChange={() => void toggleBackgroundSync()}
                   />
                   <span>{t('easistent.backgroundSync')}</span>
                 </label>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-nt-dim">
                   {t('easistent.backgroundSyncHint')}
                 </p>
               </div>
             )}
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-nt-dim">
               {t('easistent.lastSync', {
                 time: syncState?.lastSuccessUtc
                   ? formatUtcInZone(syncState.lastSuccessUtc, 'd.M.yyyy HH:mm')
@@ -432,7 +432,7 @@ export function SettingsPage() {
                 role="status"
                 className={`text-sm ${
                   feedback.kind === 'error'
-                    ? 'text-red-600 dark:text-red-400'
+                    ? 'text-nt-accent'
                     : 'text-green-700 dark:text-green-400'
                 }`}
               >
@@ -447,7 +447,7 @@ export function SettingsPage() {
         <h2 id="google-heading" className="section-title mb-1">
           {t('google.title')}
         </h2>
-        <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mb-3 text-sm text-nt-dim">
           {t('google.description')}
         </p>
         {dbState.status === 'error' ? (
@@ -468,7 +468,7 @@ export function SettingsPage() {
                 spellCheck={false}
                 onChange={(event) => setGoogleClientId(event.target.value)}
               />
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1 text-xs text-nt-dim">
                 {t('google.clientIdHint')}
               </p>
             </div>
@@ -510,7 +510,7 @@ export function SettingsPage() {
                 </>
               )}
             </div>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-nt-dim">
               {t('google.lastSync', {
                 time: googleSyncState?.lastSuccessUtc
                   ? formatUtcInZone(googleSyncState.lastSuccessUtc, 'd.M.yyyy HH:mm')
@@ -522,7 +522,7 @@ export function SettingsPage() {
                 role="status"
                 className={`text-sm ${
                   google.feedback.kind === 'error'
-                    ? 'text-red-600 dark:text-red-400'
+                    ? 'text-nt-accent'
                     : 'text-green-700 dark:text-green-400'
                 }`}
               >
@@ -539,7 +539,7 @@ export function SettingsPage() {
         <h2 id="backup-heading" className="section-title mb-1">
           {t('settings.backupSection')}
         </h2>
-        <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+        <p className="mb-3 text-sm text-nt-dim">
           {t('settings.backupDescription')}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -574,7 +574,7 @@ export function SettingsPage() {
             role="status"
             className={`mt-3 text-sm ${
               status.kind === 'error'
-                ? 'text-red-600 dark:text-red-400'
+                ? 'text-nt-accent'
                 : 'text-green-700 dark:text-green-400'
             }`}
           >
@@ -583,7 +583,7 @@ export function SettingsPage() {
         )}
       </section>
 
-      <p className="text-center text-xs text-slate-400">
+      <p className="text-center text-xs text-nt-dim">
         {t('common.version', { version: __APP_VERSION__ })}
       </p>
 

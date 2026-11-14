@@ -26,7 +26,7 @@ export function EasistentSyncButton() {
           role="status"
           className={`text-sm ${
             feedback.kind === 'error'
-              ? 'text-red-600 dark:text-red-400'
+              ? 'text-nt-accent'
               : 'text-green-700 dark:text-green-400'
           }`}
         >

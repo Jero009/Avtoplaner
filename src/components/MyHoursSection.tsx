@@ -103,7 +103,7 @@ export function MyHoursSection() {
       <h2 id="myhours-heading" className="section-title mb-1">
         {t('myHours.title')}
       </h2>
-      <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+      <p className="mb-3 text-sm text-nt-dim">
         {t('myHours.description')}
       </p>
 
@@ -111,7 +111,7 @@ export function MyHoursSection() {
       {state === null && dbState.status !== 'error' && <LoadingState />}
 
       {state && state.conflicts.length === 0 && (
-        <p className="text-sm text-slate-500 dark:text-slate-400">{t('myHours.empty')}</p>
+        <p className="text-sm text-nt-dim">{t('myHours.empty')}</p>
       )}
 
       {state && state.conflicts.length > 0 && (
@@ -131,7 +131,7 @@ export function MyHoursSection() {
               const labelId = `myhours-slot-${slot.key.replace(/[^a-z0-9]/gi, '-')}`;
               return (
                 <fieldset key={slot.key} className="min-w-0">
-                  <legend id={labelId} className="mb-1 text-sm font-medium text-slate-700 dark:text-slate-300">
+                  <legend id={labelId} className="mb-1 text-sm font-medium text-nt-fg">
                     {t('myHours.slotLabel', {
                       weekday: weekdayName(i18n.language, slot.isoWeekday),
                       from: slot.from,
@@ -148,12 +148,12 @@ export function MyHoursSection() {
                       return (
                         <label
                           key={option.subject.id}
-                          className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 py-1 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
+                          className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 py-1 text-sm hover:bg-nt-surface-2"
                         >
                           <input
                             type="radio"
                             name={slot.key}
-                            className="size-4 accent-blue-600"
+                            className="size-4 accent-nt-primary-bg"
                             checked={selected === value}
                             onChange={() => void pick(slot, value)}
                           />
@@ -161,7 +161,7 @@ export function MyHoursSection() {
                             <span className="font-medium">
                               {option.subject.shortName ?? option.subject.name}
                             </span>
-                            <span className="text-slate-500 dark:text-slate-400">
+                            <span className="text-nt-dim">
                               {optionLabel(option.teacher, option.classroom)}
                             </span>
                           </span>
@@ -169,12 +169,12 @@ export function MyHoursSection() {
                       );
                     })}
                     <label
-                      className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 py-1 text-sm text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+                      className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 py-1 text-sm text-nt-dim hover:bg-nt-surface-2"
                     >
                       <input
                         type="radio"
                         name={slot.key}
-                        className="size-4 accent-blue-600"
+                        className="size-4 accent-nt-primary-bg"
                         checked={selected === ''}
                         onChange={() => void pick(slot, null)}
                       />

@@ -51,14 +51,14 @@ export function AppShell() {
   };
 
   return (
-    <div className="flex min-h-dvh flex-col bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-      <header className="sticky top-0 z-30 flex h-[calc(3.5rem+env(safe-area-inset-top))] items-center gap-2 border-b border-slate-200 bg-white px-3 pt-[env(safe-area-inset-top)] dark:border-slate-800 dark:bg-slate-900">
+    <div className="flex min-h-dvh flex-col bg-nt-bg text-nt-fg">
+      <header className="sticky top-0 z-30 flex h-[calc(3.5rem+env(safe-area-inset-top))] items-center gap-2 border-b border-nt-border bg-nt-card px-3 pt-[env(safe-area-inset-top)]">
         <button
           type="button"
           onClick={toggleSidebar}
           aria-label={t('common.toggleNavigation')}
           title={t('common.toggleNavigation')}
-          className="hidden size-11 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 md:flex dark:text-slate-300 dark:hover:bg-slate-800"
+          className="hidden size-11 items-center justify-center rounded-lg text-nt-fg hover:bg-nt-surface-2 md:flex"
         >
           {collapsed ? (
             <PanelLeftOpen className="size-5" aria-hidden="true" />
@@ -70,7 +70,7 @@ export function AppShell() {
           to="/"
           className="flex items-center gap-2 rounded-lg px-2 py-1 font-medium"
         >
-          <CalendarCheck className="size-6 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+          <CalendarCheck className="size-6 text-nt-fg" aria-hidden="true" />
           <span className="text-lg">{t('app.name')}</span>
         </Link>
         <div className="ms-auto flex items-center gap-1">
@@ -88,7 +88,7 @@ export function AppShell() {
             onClick={() => setTheme(resolved === 'dark' ? 'light' : 'dark')}
             aria-label={t('common.toggleTheme')}
             title={t('common.toggleTheme')}
-            className="flex size-11 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="flex size-11 items-center justify-center rounded-lg text-nt-fg hover:bg-nt-surface-2"
           >
             {resolved === 'dark' ? (
               <Sun className="size-5" aria-hidden="true" />
@@ -100,7 +100,7 @@ export function AppShell() {
             to="/settings"
             aria-label={t('nav.settings')}
             title={t('nav.settings')}
-            className="flex size-11 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="flex size-11 items-center justify-center rounded-lg text-nt-fg hover:bg-nt-surface-2"
           >
             <Settings className="size-5" aria-hidden="true" />
           </Link>
@@ -109,7 +109,7 @@ export function AppShell() {
 
       <div className="flex flex-1">
         <aside
-          className={`sticky top-14 hidden h-[calc(100dvh-3.5rem)] shrink-0 flex-col border-e border-slate-200 bg-white py-4 md:flex dark:border-slate-800 dark:bg-slate-900 ${
+          className={`sticky top-14 hidden h-[calc(100dvh-3.5rem)] shrink-0 flex-col border-e border-nt-border bg-nt-card py-4 md:flex ${
             collapsed ? 'w-16' : 'w-60'
           }`}
         >
@@ -122,8 +122,8 @@ export function AppShell() {
                 className={({ isActive }) =>
                   `flex h-11 items-center gap-3 rounded-lg px-3 text-sm font-medium ${
                     isActive
-                      ? 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
-                      : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800'
+                      ? 'bg-nt-primary-bg text-nt-primary-fg'
+                      : 'text-nt-fg hover:bg-nt-surface-2'
                   } ${collapsed ? 'justify-center' : ''}`
                 }
               >
@@ -132,7 +132,7 @@ export function AppShell() {
               </NavLink>
             ))}
           </nav>
-          <div className="mt-auto px-4 text-xs text-slate-400">
+          <div className="mt-auto px-4 text-xs text-nt-dim">
             {!collapsed && (
               <span>{t('common.version', { version: __APP_VERSION__ })}</span>
             )}
@@ -146,7 +146,7 @@ export function AppShell() {
 
       <nav
         aria-label={t('nav.menu')}
-        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] md:hidden dark:border-slate-800 dark:bg-slate-900"
+        className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-nt-border bg-nt-card pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         {NAV_ITEMS.map((item) => (
           <NavLink
@@ -156,8 +156,8 @@ export function AppShell() {
             className={({ isActive }) =>
               `flex h-14 min-h-11 flex-col items-center justify-center gap-0.5 text-xs ${
                 isActive
-                  ? 'text-blue-600 dark:text-blue-400'
-                  : 'text-slate-500 dark:text-slate-400'
+                  ? 'text-nt-fg'
+                  : 'text-nt-dim'
               }`
             }
           >

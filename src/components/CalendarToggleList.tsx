@@ -21,24 +21,24 @@ export function CalendarToggleList({
       : calendar.name;
 
   if (calendars.length === 0) {
-    return <p className="text-sm text-slate-500">{t('calendar.noCalendars')}</p>;
+    return <p className="text-sm text-nt-dim">{t('calendar.noCalendars')}</p>;
   }
 
   return (
     <ul className="flex flex-col gap-1">
       {calendars.map((calendar) => (
         <li key={calendar.id}>
-          <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 py-1 text-sm hover:bg-slate-100 dark:hover:bg-slate-800">
+          <label className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg px-2 py-1 text-sm hover:bg-nt-surface-2">
             <input
               type="checkbox"
               checked={calendar.visible}
               onChange={(event) => {
                 void onToggle(calendar.id, event.target.checked);
               }}
-              className="size-4 accent-blue-600"
+              className="size-4 accent-nt-primary-bg"
             />
             <span
-              className="size-3 shrink-0 rounded-full border border-slate-300 dark:border-slate-600"
+              className="size-3 shrink-0 rounded-full border border-nt-border-strong"
               style={{ backgroundColor: calendar.color }}
               aria-hidden="true"
             />

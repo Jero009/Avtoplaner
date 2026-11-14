@@ -24,7 +24,7 @@ import {
 const STATUS_BADGE: Record<string, string> = {
   substitution:
     'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300',
-  cancelled: 'bg-red-100 text-red-800 dark:bg-red-950 dark:text-red-300',
+  cancelled: 'bg-nt-accent/10 text-nt-accent',
   changed: 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300',
 };
 
@@ -185,10 +185,10 @@ export function TimetablePage() {
           ) : (
             [...byDay.entries()].map(([dayIso, lessons]) => (
               <div key={dayIso} className="mb-3 last:mb-0">
-                <h3 className="mb-1 text-sm font-medium text-slate-500 dark:text-slate-400">
+                <h3 className="mb-1 text-sm font-medium text-nt-dim">
                   {dayLabel(dayIso)}
                 </h3>
-                <ul className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
+                <ul className="flex flex-col divide-y divide-nt-border">
                   {lessons.map((lesson) => {
                     const subject = subjectOf(lesson);
                     const name = subject ? (subject.shortName ?? subject.name) : '—';
@@ -198,22 +198,22 @@ export function TimetablePage() {
                         key={lesson.id}
                         className={`flex min-h-11 flex-wrap items-center gap-x-3 gap-y-1 py-1 text-sm ${
                           lesson.status === 'cancelled'
-                            ? 'text-slate-400 line-through dark:text-slate-500'
+                            ? 'text-nt-dim line-through'
                             : ''
                         }`}
                       >
-                        <span className="w-28 shrink-0 text-slate-500 tabular-nums dark:text-slate-400">
+                        <span className="w-28 shrink-0 text-nt-dim tabular-nums dark:text-nt-dim">
                           {formatUtcInZone(lesson.startUtc, 'HH:mm')}–
                           {formatUtcInZone(lesson.endUtc, 'HH:mm')}
                         </span>
                         <span className="font-medium">{name}</span>
                         {lesson.classroom && (
-                          <span className="text-slate-500 dark:text-slate-400">
+                          <span className="text-nt-dim">
                             {lesson.classroom}
                           </span>
                         )}
                         {lesson.teacher && (
-                          <span className="hidden text-slate-400 sm:inline">
+                          <span className="hidden text-nt-dim sm:inline">
                             {lesson.teacher}
                           </span>
                         )}

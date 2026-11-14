@@ -173,7 +173,7 @@ export function EventForm({
             type="checkbox"
             checked={state.allDay}
             onChange={(e) => setState((s) => ({ ...s, allDay: e.target.checked }))}
-            className="size-4 accent-blue-600"
+            className="size-4 accent-nt-primary-bg"
           />
           {t('calendar.fieldAllDay')}
         </label>
@@ -203,7 +203,7 @@ export function EventForm({
           />
         </div>
         {error && (
-          <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+          <p className="text-sm text-nt-accent" role="alert">
             {error}
           </p>
         )}

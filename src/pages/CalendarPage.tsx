@@ -121,7 +121,7 @@ export function CalendarPage() {
         conflictIds.current = findConflictingIds(visible);
         const colorOf = (calendarId: string): string =>
           calendars?.find((calendar) => calendar.id === calendarId)?.color ??
-          '#2563eb';
+          '#6b6b6b';
         // eAsistent rows carry their kind in the external-id prefix so the
         // calendar can style them without extra schema.
         const extraClassNames = (record: EventRecord): string[] => {
@@ -206,7 +206,7 @@ export function CalendarPage() {
         {title}
       </h2>
       <div
-        className="flex overflow-hidden rounded-lg border border-slate-300 dark:border-slate-700"
+        className="flex overflow-hidden rounded-lg border border-nt-border"
         role="group"
         aria-label={t('calendar.title')}
       >
@@ -218,8 +218,8 @@ export function CalendarPage() {
             aria-pressed={view === key}
             className={`h-11 px-3 text-sm font-medium ${
               view === key
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'
+                ? 'bg-nt-primary-bg text-nt-primary-fg'
+                : 'bg-nt-card text-nt-fg hover:bg-nt-surface-2'
             }`}
           >
             {t(VIEW_CONFIG[key].labelKey)}
@@ -248,7 +248,7 @@ export function CalendarPage() {
   }
 
   const colorOf = (calendarId: string): string =>
-    calendars?.find((calendar) => calendar.id === calendarId)?.color ?? '#2563eb';
+    calendars?.find((calendar) => calendar.id === calendarId)?.color ?? '#6b6b6b';
 
   const handleToggle = async (id: string, visible: boolean) => {
     await dbState.database.repos.calendars.setVisible(id, visible);
@@ -312,7 +312,7 @@ export function CalendarPage() {
 
       {calendars && (
         <section className="card" aria-label={t('calendar.sources')}>
-          <h2 className="mb-2 text-sm font-medium text-slate-500 dark:text-slate-400">
+          <h2 className="mb-2 text-sm font-medium text-nt-dim">
             {t('calendar.sources')}
           </h2>
           <CalendarToggleList calendars={calendars} onToggle={handleToggle} />

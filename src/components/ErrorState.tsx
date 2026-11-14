@@ -10,7 +10,7 @@ export function ErrorState({
 }) {
   const { t } = useTranslation();
   return (
-    <div className="flex min-h-24 flex-col items-center justify-center gap-3 py-8 text-red-600 dark:text-red-400" role="alert">
+    <div className="flex min-h-24 flex-col items-center justify-center gap-3 py-8 text-nt-accent" role="alert">
       <div className="flex items-center gap-2">
         <AlertCircle className="size-5" aria-hidden="true" />
         <span>{message ?? t('common.error')}</span>

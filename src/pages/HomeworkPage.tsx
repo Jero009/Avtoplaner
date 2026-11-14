@@ -129,17 +129,17 @@ export function HomeworkPage() {
             {open.length === 0 ? (
               <EmptyState icon={BookOpen} title={t('homework.noHomework')} />
             ) : (
-              <ul className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
+              <ul className="flex flex-col divide-y divide-nt-border">
                 {open.map((item) => (
                   <li key={item.id} className="flex min-h-11 items-center gap-3 py-1 text-sm">
                     <input
                       type="checkbox"
-                      className="size-4 shrink-0 accent-blue-600"
+                      className="size-4 shrink-0 accent-nt-primary-bg"
                       checked={false}
                       onChange={() => void toggleDone(item)}
                       aria-label={t('homework.markDone', { title: item.title })}
                     />
-                    <span className="w-24 shrink-0 text-slate-500 tabular-nums dark:text-slate-400">
+                    <span className="w-24 shrink-0 text-nt-dim tabular-nums dark:text-nt-dim">
                       {item.dueDate}
                     </span>
                     <span className="min-w-0 flex-1">
@@ -148,7 +148,7 @@ export function HomeworkPage() {
                       )}
                       <span>{item.title}</span>
                       {item.description && (
-                        <span className="block truncate text-slate-500 dark:text-slate-400">
+                        <span className="block truncate text-nt-dim">
                           {item.description}
                         </span>
                       )}
@@ -166,20 +166,20 @@ export function HomeworkPage() {
             {done.length === 0 ? (
               <EmptyState icon={BookOpen} title={t('homework.noHomeworkDone')} />
             ) : (
-              <ul className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
+              <ul className="flex flex-col divide-y divide-nt-border">
                 {done.map((item) => (
                   <li key={item.id} className="flex min-h-11 items-center gap-3 py-1 text-sm">
                     <input
                       type="checkbox"
-                      className="size-4 shrink-0 accent-blue-600"
+                      className="size-4 shrink-0 accent-nt-primary-bg"
                       checked
                       onChange={() => void toggleDone(item)}
                       aria-label={t('homework.markUndone', { title: item.title })}
                     />
-                    <span className="w-24 shrink-0 text-slate-400 tabular-nums">
+                    <span className="w-24 shrink-0 text-nt-dim tabular-nums">
                       {item.dueDate}
                     </span>
-                    <span className="min-w-0 flex-1 text-slate-400 line-through dark:text-slate-500">
+                    <span className="min-w-0 flex-1 text-nt-dim line-through">
                       {subjectName(item.subjectId) && `${subjectName(item.subjectId)}: `}
                       {item.title}
                     </span>
@@ -196,10 +196,10 @@ export function HomeworkPage() {
             {data.tests.length === 0 ? (
               <EmptyState icon={FlaskConical} title={t('homework.noTests')} />
             ) : (
-              <ul className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
+              <ul className="flex flex-col divide-y divide-nt-border">
                 {data.tests.map((test) => (
                   <li key={test.id} className="flex min-h-11 items-center gap-3 py-1 text-sm">
-                    <span className="w-28 shrink-0 text-slate-500 tabular-nums dark:text-slate-400">
+                    <span className="w-28 shrink-0 text-nt-dim tabular-nums dark:text-nt-dim">
                       {formatUtcInZone(test.startUtc, 'd.M. HH:mm')}
                     </span>
                     <span className="min-w-0 flex-1 font-medium">{test.title}</span>

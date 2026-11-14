@@ -42,7 +42,7 @@ export function Modal({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white p-4 sm:rounded-2xl dark:bg-slate-900"
+        className="max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-nt-card p-4 sm:rounded-2xl"
       >
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold">{title}</h2>
@@ -50,7 +50,7 @@ export function Modal({
             type="button"
             onClick={onClose}
             aria-label={t('common.close')}
-            className="flex size-11 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+            className="flex size-11 items-center justify-center rounded-lg text-nt-dim hover:bg-nt-surface-2"
           >
             <X className="size-5" aria-hidden="true" />
           </button>

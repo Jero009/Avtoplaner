@@ -19,7 +19,7 @@ export function ConfirmDialog({
   const { t } = useTranslation();
   return (
     <Modal title={title} onClose={onCancel}>
-      <p className="mb-4 text-sm text-slate-600 dark:text-slate-300">{message}</p>
+      <p className="mb-4 text-sm text-nt-fg">{message}</p>
       <div className="flex justify-end gap-2">
         <button type="button" className="btn btn-secondary" onClick={onCancel}>
           {t('common.cancel')}

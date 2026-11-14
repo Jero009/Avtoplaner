@@ -202,12 +202,12 @@ export function DeviceCalendarSection() {
       <h2 id="device-calendar-heading" className="section-title mb-1">
         {t('deviceCalendar.title')}
       </h2>
-      <p className="mb-3 text-sm text-slate-500 dark:text-slate-400">
+      <p className="mb-3 text-sm text-nt-dim">
         {t('deviceCalendar.description')}
       </p>
 
       {!supported ? (
-        <p className="text-sm text-slate-500 dark:text-slate-400">
+        <p className="text-sm text-nt-dim">
           {t('deviceCalendar.webOnly')}
         </p>
       ) : (
@@ -245,7 +245,7 @@ export function DeviceCalendarSection() {
                 </button>
               </div>
               {calendars !== null && calendars.length === 0 && (
-                <p className="mt-1 text-xs text-slate-400">
+                <p className="mt-1 text-xs text-nt-dim">
                   {t('deviceCalendar.noCalendars')}
                 </p>
               )}
@@ -288,7 +288,7 @@ export function DeviceCalendarSection() {
             </button>
           </div>
 
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-nt-dim">
             {t('deviceCalendar.lastWrite', {
               time: lastWrite
                 ? formatUtcInZone(lastWrite, 'd.M.yyyy HH:mm')
@@ -301,7 +301,7 @@ export function DeviceCalendarSection() {
               role="status"
               className={`text-sm ${
                 status.kind === 'error'
-                  ? 'text-red-600 dark:text-red-400'
+                  ? 'text-nt-accent'
                   : 'text-green-700 dark:text-green-400'
               }`}
             >

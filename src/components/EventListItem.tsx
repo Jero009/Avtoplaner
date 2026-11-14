@@ -21,7 +21,7 @@ export function EventListItem({
         style={{ backgroundColor: color }}
         aria-hidden="true"
       />
-      <span className="w-28 shrink-0 text-sm text-slate-500 tabular-nums dark:text-slate-400">
+      <span className="w-28 shrink-0 text-sm text-nt-dim tabular-nums dark:text-nt-dim">
         {event.allDay
           ? t('dashboard.allDay')
           : formatUtcInZone(event.startUtc, 'HH:mm')}
@@ -31,7 +31,7 @@ export function EventListItem({
       </span>
       {conflicting && (
         <span
-          className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400"
+          className="flex items-center gap-1 text-xs text-nt-accent"
           title={t('dashboard.conflictBadge')}
         >
           <TriangleAlert className="size-4" aria-hidden="true" />

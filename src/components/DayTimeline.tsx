@@ -111,7 +111,7 @@ export function DayTimeline({
       className="card flex h-[62dvh] min-h-80 flex-col overflow-hidden p-0"
       aria-label={dayLabel}
     >
-      <div className="flex items-center justify-between gap-2 border-b border-slate-200 px-2 py-1.5 dark:border-slate-800">
+      <div className="flex items-center justify-between gap-2 border-b border-nt-border px-2 py-1.5">
         <button
           type="button"
           className="btn btn-secondary btn-icon"
@@ -157,7 +157,7 @@ export function DayTimeline({
               {layout.hourMarks.map((mark) => (
                 <span
                   key={mark}
-                  className="absolute right-1 -translate-y-1/2 text-xs tabular-nums text-slate-400 dark:text-slate-500"
+                  className="absolute right-1 -translate-y-1/2 text-xs tabular-nums text-nt-dim"
                   style={{ top: (mark - layout.startMin) * PX_PER_MINUTE }}
                 >
                   {minutesLabel(mark)}
@@ -166,11 +166,11 @@ export function DayTimeline({
             </div>
 
             {/* Event area */}
-            <div className="relative flex-1 border-s border-slate-200 dark:border-slate-800">
+            <div className="relative flex-1 border-s border-nt-border">
               {layout.hourMarks.map((mark) => (
                 <div
                   key={mark}
-                  className="absolute inset-x-0 border-t border-slate-100 dark:border-slate-800"
+                  className="absolute inset-x-0 border-t border-nt-border"
                   style={{ top: (mark - layout.startMin) * PX_PER_MINUTE }}
                   aria-hidden="true"
                 />
@@ -211,8 +211,8 @@ export function DayTimeline({
                   style={{ top: nowTop }}
                   aria-hidden="true"
                 >
-                  <div className="relative h-0.5 w-full bg-red-500">
-                    <span className="absolute -start-1 -top-[3px] size-2 rounded-full bg-red-500" />
+                  <div className="relative h-0.5 w-full bg-nt-accent">
+                    <span className="absolute -start-1 -top-[3px] size-2 rounded-full bg-nt-accent" />
                   </div>
                 </div>
               )}

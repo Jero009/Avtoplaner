@@ -101,7 +101,7 @@ export function DashboardPage() {
 
   const colorOf = (calendarId: string): string =>
     data?.calendars.find((calendar) => calendar.id === calendarId)?.color ??
-    '#2563eb';
+    '#6b6b6b';
 
   const todayRange = dayRangeUtc(today);
   const viewedRange = dayRangeUtc(viewedDay);
@@ -206,7 +206,7 @@ export function DashboardPage() {
             {todayEvents.length === 0 ? (
               <EmptyState icon={CalendarDays} title={t('dashboard.noEventsToday')} />
             ) : (
-              <ul className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
+              <ul className="flex flex-col divide-y divide-nt-border">
                 {todayEvents.map((event) => (
                   <EventListItem
                     key={event.id}
@@ -228,10 +228,10 @@ export function DashboardPage() {
             ) : (
               groups.map(([dayIso, events]) => (
                 <div key={dayIso} className="mb-2">
-                  <h3 className="mb-1 text-sm font-medium text-slate-500 dark:text-slate-400">
+                  <h3 className="mb-1 text-sm font-medium text-nt-dim">
                     {dayLabel(dayIso)}
                   </h3>
-                  <ul className="flex flex-col divide-y divide-slate-100 dark:divide-slate-800">
+                  <ul className="flex flex-col divide-y divide-nt-border">
                     {events.map((event) => (
                       <EventListItem
                         key={event.id}
@@ -256,7 +256,7 @@ export function DashboardPage() {
               <ul>
                 {data.homework.map((item) => (
                   <li key={item.id} className="flex min-h-11 items-center gap-3 py-1 text-sm">
-                    <span className="w-24 shrink-0 text-slate-500 dark:text-slate-400">
+                    <span className="w-24 shrink-0 text-nt-dim">
                       {item.dueDate}
                     </span>
                     <span className="font-medium">{item.title}</span>
@@ -270,7 +270,7 @@ export function DashboardPage() {
 
       <button
         type="button"
-        className="fixed bottom-24 right-4 z-40 flex size-14 items-center justify-center rounded-full bg-blue-600 text-white shadow-lg transition-colors hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 md:bottom-8 dark:bg-blue-500 dark:hover:bg-blue-400"
+        className="fixed bottom-24 right-4 z-40 flex size-14 items-center justify-center rounded-full bg-nt-primary-bg text-nt-primary-fg shadow-lg transition-colors hover:bg-nt-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-nt-fg md:bottom-8"
         onClick={() => setFormOpen(`${viewedDay}T${prefillHour()}`)}
         aria-label={t('timeline.newEvent')}
       >

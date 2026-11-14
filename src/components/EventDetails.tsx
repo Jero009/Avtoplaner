@@ -36,7 +36,7 @@ export function EventDetails({
       <div className="flex flex-col gap-3">
         {conflicting && (
           <div
-            className="flex items-start gap-2 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-950 dark:text-red-300"
+            className="flex items-start gap-2 rounded-lg border border-nt-accent/40 bg-nt-accent/10 p-3 text-sm text-nt-accent"
             role="alert"
           >
             <TriangleAlert className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
@@ -61,17 +61,17 @@ export function EventDetails({
           <h3 className="text-lg font-semibold">{event.title}</h3>
         </div>
         <dl className="grid grid-cols-[max-content_1fr] items-baseline gap-x-4 gap-y-2 text-sm">
-          <dt className="text-slate-500 dark:text-slate-400">
+          <dt className="text-nt-dim">
             {t('calendar.fieldStart')}
           </dt>
           <dd>{dateTime(event.startUtc)}</dd>
-          <dt className="text-slate-500 dark:text-slate-400">
+          <dt className="text-nt-dim">
             {t('calendar.fieldEnd')}
           </dt>
           <dd>{dateTime(event.endUtc)}</dd>
           {event.allDay && (
             <>
-              <dt className="text-slate-500 dark:text-slate-400">
+              <dt className="text-nt-dim">
                 {t('calendar.fieldAllDay')}
               </dt>
               <dd>{t('dashboard.allDay')}</dd>
@@ -79,7 +79,7 @@ export function EventDetails({
           )}
           {event.location && (
             <>
-              <dt className="text-slate-500 dark:text-slate-400">
+              <dt className="text-nt-dim">
                 {t('calendar.fieldLocation')}
               </dt>
               <dd>{event.location}</dd>
@@ -87,7 +87,7 @@ export function EventDetails({
           )}
           {event.description && (
             <>
-              <dt className="text-slate-500 dark:text-slate-400">
+              <dt className="text-nt-dim">
                 {t('calendar.fieldDescription')}
               </dt>
               <dd className="whitespace-pre-line">{event.description}</dd>
