@@ -206,7 +206,7 @@ export function CalendarPage() {
         {title}
       </h2>
       <div
-        className="flex overflow-hidden rounded-lg border border-nt-border"
+        className="flex overflow-hidden rounded-lg"
         role="group"
         aria-label={t('calendar.title')}
       >

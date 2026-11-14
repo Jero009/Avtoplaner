@@ -11,7 +11,7 @@ export function EmptyState({
   description?: ReactNode;
 }) {
   return (
-    <div className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-nt-border px-4 py-8 text-center">
+    <div className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-xl px-4 py-8 text-center">
       <Icon className="size-8 text-nt-dim" aria-hidden="true" />
       <p className="font-medium text-nt-fg">{title}</p>
       {description && (
