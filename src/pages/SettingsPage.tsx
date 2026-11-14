@@ -53,7 +53,7 @@ const LANGUAGE_OPTIONS: readonly { value: Language; labelKey: string }[] = [
 export function SettingsPage() {
   const { t, i18n } = useTranslation();
   const dbState = useDb();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, style, setStyle } = useTheme();
   const db = dbState.status === 'ready' ? dbState.database : null;
   const [calendars, setCalendars] = useState<CalendarRecord[] | null>(null);
   const [status, setStatus] = useState<{ kind: 'info' | 'error'; text: string } | null>(null);
@@ -278,6 +278,25 @@ export function SettingsPage() {
                   className={`btn ${theme === option.value ? 'btn-primary' : 'btn-secondary'}`}
                 >
                   {t(option.labelKey)}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="label" id="style-label">
+              {t('settings.style')}
+            </p>
+            <div role="radiogroup" aria-labelledby="style-label" className="flex flex-wrap gap-2">
+              {(['classic', 'translucent'] as const).map((value) => (
+                <button
+                  key={value}
+                  type="button"
+                  role="radio"
+                  aria-checked={style === value}
+                  onClick={() => setStyle(value)}
+                  className={`btn ${style === value ? 'btn-primary' : 'btn-secondary'}`}
+                >
+                  {value === 'classic' ? t('settings.styleClassic') : t('settings.styleTranslucent')}
                 </button>
               ))}
             </div>

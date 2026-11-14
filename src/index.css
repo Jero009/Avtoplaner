@@ -38,6 +38,39 @@
   --nt-primary-hover: #dedede;
   --nt-accent: #d71921;
   --nt-accent-hover: #e5333a;
+  --nt-fallback: #141414; /* solid surface when backdrop-filter unsupported */
+}
+
+/* ------------------------------------------------------------------ */
+/* Translucent style (html.theme-tl) — OS 5 frosted material applied   */
+/* to app surfaces. [impl] extrapolation: the OS itself only frosts    */
+/* wallpaper-backed surfaces; this carries the look into the app.      */
+/* Cards/nav/header become translucent + frost and carry exactly ONE   */
+/* hairline; solid --nt-fallback guarantees contrast without blur.     */
+/* ------------------------------------------------------------------ */
+html.theme-tl {
+  --nt-card: rgba(255, 255, 255, 0.72);
+}
+html.theme-tl.dark {
+  --nt-card: rgba(20, 20, 20, 0.66);
+}
+html.theme-tl .card,
+html.theme-tl header,
+html.theme-tl nav {
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+}
+html.theme-tl .card {
+  border: 1px solid var(--nt-border); /* the frosted hairline */
+}
+@supports not (
+    (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+  ) {
+  html.theme-tl .card,
+  html.theme-tl header,
+  html.theme-tl nav {
+    background: var(--nt-fallback);
+  }
 }
 
 @theme inline {

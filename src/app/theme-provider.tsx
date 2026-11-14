@@ -4,8 +4,8 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import type { Theme } from '../utils/preferences';
-import { saveTheme, storedTheme } from '../utils/preferences';
+import type { Style, Theme } from '../utils/preferences';
+import { saveStyle, saveTheme, storedStyle, storedTheme } from '../utils/preferences';
 import { ThemeContext, type ThemeContextValue } from './theme-context';
 
 function useSystemDark(): boolean {
@@ -23,14 +23,16 @@ function useSystemDark(): boolean {
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<Theme>(storedTheme);
+  const [style, setStyleState] = useState<Style>(storedStyle);
   const systemDark = useSystemDark();
   const resolved: 'light' | 'dark' =
     theme === 'system' ? (systemDark ? 'dark' : 'light') : theme;
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', resolved === 'dark');
+    document.documentElement.classList.toggle('theme-tl', style === 'translucent');
     document.documentElement.style.colorScheme = resolved;
-  }, [resolved]);
+  }, [resolved, style]);
 
   const value = useMemo<ThemeContextValue>(
     () => ({
@@ -40,8 +42,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         setThemeState(next);
         saveTheme(next);
       },
+      style,
+      setStyle: (next: Style) => {
+        setStyleState(next);
+        saveStyle(next);
+      },
     }),
-    [theme, resolved],
+    [theme, resolved, style],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

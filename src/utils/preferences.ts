@@ -2,7 +2,10 @@ export type Theme = 'light' | 'dark' | 'system';
 
 export type Language = 'sl' | 'en';
 
+export type Style = 'classic' | 'translucent';
+
 const THEME_KEY = 'autoplaner.theme';
+const STYLE_KEY = 'autoplaner.style';
 const LANGUAGE_KEY = 'autoplaner.language';
 const SIDEBAR_KEY = 'autoplaner.sidebar-collapsed';
 
@@ -15,6 +18,15 @@ export function storedTheme(): Theme {
 
 export function saveTheme(theme: Theme): void {
   localStorage.setItem(THEME_KEY, theme);
+}
+
+export function storedStyle(): Style {
+  const value = localStorage.getItem(STYLE_KEY);
+  return value === 'translucent' ? 'translucent' : 'classic';
+}
+
+export function saveStyle(style: Style): void {
+  localStorage.setItem(STYLE_KEY, style);
 }
 
 export function storedLanguage(): Language {
